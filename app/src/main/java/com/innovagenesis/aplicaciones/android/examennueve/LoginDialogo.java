@@ -36,7 +36,7 @@ public class LoginDialogo extends DialogFragment {
         Button btnLogin = (Button)view.findViewById(R.id.btn_login);
         Button btnSalirogin = (Button)view.findViewById(R.id.btn_salir_login);
 
-        
+
 
 
         return builder.create();
