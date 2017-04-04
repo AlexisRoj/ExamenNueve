@@ -8,5 +8,6 @@
     <string name="campoVacio">Este campo no puede estar vacio</string>
     <string name="mensajePrivilegios">No cuenta con suficientes privilegios para ingresar</string>
     <string name="contrasenaNoValida">Nombre de usuario o contraseña no validos</string>
-    <string name="procesando">Procesando solicitud...</string>
+    <string name="procesando">Procesando solicitud…</string>
+    <string name="olvidar_pass">Olvidar contraseña</string>
 </resources>
