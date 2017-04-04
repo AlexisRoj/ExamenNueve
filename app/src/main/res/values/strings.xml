@@ -6,4 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="campoVacio">Este campo no puede estar vacio</string>
+    <string name="mensajePrivilegios">No cuenta con suficientes privilegios para ingresar</string>
+    <string name="contrasenaNoValida">Nombre de usuario o contraseña no validos</string>
+    <string name="procesando">Procesando solicitud...</string>
 </resources>
