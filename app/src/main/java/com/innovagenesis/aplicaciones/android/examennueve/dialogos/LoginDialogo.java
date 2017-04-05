@@ -1,5 +1,6 @@
-package com.innovagenesis.aplicaciones.android.examennueve;
+package com.innovagenesis.aplicaciones.android.examennueve.dialogos;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+
+import com.innovagenesis.aplicaciones.android.examennueve.R;
 
 
 /**
@@ -41,13 +44,14 @@ public class LoginDialogo extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        @SuppressLint("InflateParams")
         final View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.login_fragment, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
 
-        /** seccion de textInput*/
+        /* seccion de textInput*/
         final TextInputLayout textInputUser = (TextInputLayout) view.findViewById(R.id.textInputLayoutUser);
         final TextInputLayout textInputPass = (TextInputLayout) view.findViewById(R.id.textInputLayoutPass);
 
@@ -68,14 +72,14 @@ public class LoginDialogo extends DialogFragment {
                 if (checkBoxRecordar.isChecked())
                     recordarLogin = true;
 
-                /** Validacion de los text inputs*/
+                /* Validacion de los text inputs*/
                 String errorUsuario = "";
                 if (TextUtils.isEmpty(txtUsuario.getText())) {
                     errorUsuario = getString(R.string.campoVacio);
                     enviarInterface = false;
                 } else
                     nombreUsuario = txtUsuario.getText().toString();
-                validarTextInput(textInputUser, errorUsuario);
+                mValidarTextInput(textInputUser, errorUsuario);
 
                 String errorPass = "";
                 if (TextUtils.isEmpty(txtPass.getText())) {
@@ -83,7 +87,7 @@ public class LoginDialogo extends DialogFragment {
                     enviarInterface = false;
                 } else
                     contrasenaUsuario = txtPass.getText().toString();
-                validarTextInput(textInputPass, errorPass);
+                mValidarTextInput(textInputPass, errorPass);
 
                 if (enviarInterface)
                     listener.hacerLogin(nombreUsuario, contrasenaUsuario, recordarLogin);
@@ -101,7 +105,7 @@ public class LoginDialogo extends DialogFragment {
     /**
      * Valida que los datos del textInput no esten vacios
      */
-    private void validarTextInput(TextInputLayout textInput, String mensajeError) {
+    private void mValidarTextInput(TextInputLayout textInput, String mensajeError) {
         textInput.setError(mensajeError);
         if (mensajeError == null) {
             textInput.setErrorEnabled(false);

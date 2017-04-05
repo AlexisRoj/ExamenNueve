@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
-import com.innovagenesis.aplicaciones.android.examennueve.LoginDialogo;
+import com.innovagenesis.aplicaciones.android.examennueve.dialogos.LoginDialogo;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.login.ConsultarLoginAsync;
 
