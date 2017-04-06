@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Created by alexi on 04/04/2017.
  */
 
-public class UsuariosAsigna implements Serializable{
+public class UsuariosAsigna{
 
     public String descripcion;
     public int codigo;

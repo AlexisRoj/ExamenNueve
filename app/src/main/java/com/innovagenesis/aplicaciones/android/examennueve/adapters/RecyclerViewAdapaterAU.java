@@ -22,8 +22,9 @@ public class RecyclerViewAdapaterAU extends RecyclerView.Adapter<RecyclerViewHol
     private LayoutInflater inflater;
     private List<UsuariosAsigna> data = Collections.emptyList();
 
-    public RecyclerViewAdapaterAU(Context context) {
+    public RecyclerViewAdapaterAU(Context context, List<UsuariosAsigna> data) {
         this.context = context;
+        this.data = data;
         inflater = LayoutInflater.from(context);
     }
 

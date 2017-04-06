@@ -26,4 +26,6 @@ public class DiccionarioDatos {
     public static final String URL_SERVICIO_TAREA =
             "http://" + ip + ":" + puerto + "/WebServiceExamenNueve/webapi/tareas/";
 
+    public static final String URL_SERVICIO_ASIGNA =
+            "http://" + ip + ":" + puerto + "/WebServiceExamenNueve/webapi/asignatura/";
 }

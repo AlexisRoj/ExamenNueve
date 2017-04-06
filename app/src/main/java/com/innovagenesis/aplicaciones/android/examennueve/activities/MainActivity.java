@@ -10,6 +10,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,14 +24,24 @@ import android.view.MenuItem;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
+import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapaterAU;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.estudiantes.EstudiantesAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.AsignaturaFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        EstudiantesAsyncTask.mDesplegarEstudiantes {
 
     SharedPreferences preferences;
+    int contenedor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN,MODE_PRIVATE);
+        preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -105,11 +117,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
-        int contenedor = R.layout.content_main;
 
         if (id == R.id.nav_asignatura) {
             // Se envía la solicitud asincronica de asignaturas
-
+            try {
+                new EstudiantesAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
 
 
         } else if (id == R.id.nav_estudiante) {
@@ -126,11 +141,30 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Método encargado de hacer la carga de todos los fragmentos
-     * */
+     */
     @SuppressLint("CommitTransaction")
     private FragmentTransaction mInstanciarFragment(int contenedor, Fragment fragment) {
 
         return getSupportFragmentManager().beginTransaction()
-                .replace(contenedor,fragment);
+                .replace(contenedor, fragment);
+    }
+
+    @Override
+    public void DesplegarEstudiantes(ArrayList<UsuariosAsigna> listaUsuarios) {
+
+        contenedor = R.id.contenedor;
+        Fragment fragment = AsignaturaFragment.newInstances(listaUsuarios);
+
+        //mListarDonantes(listaUsuarios);
+        mInstanciarFragment(contenedor,fragment).commit();
+    }
+
+    public void mListarDonantes(List<UsuariosAsigna> usuariosAsigna) {
+        /** Llena el recyclerView en activity*/
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(this,usuariosAsigna);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

@@ -14,10 +14,11 @@ import org.json.JSONException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Encargada de traer los estuadiante a listar
@@ -30,7 +31,7 @@ public class EstudiantesAsyncTask extends AsyncTask<URL, Integer, String> {
     private ProgressDialog progressDialog;
 
     public interface mDesplegarEstudiantes {
-        void DesplegarEstudiantes(List<UsuariosAsigna> listaUsuarios);
+        void DesplegarEstudiantes(ArrayList<UsuariosAsigna> listaUsuarios);
     }
 
     private mDesplegarEstudiantes listener;
@@ -80,9 +81,12 @@ public class EstudiantesAsyncTask extends AsyncTask<URL, Integer, String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
 
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
+
         if (s != null) {
             //LLena la lista con el json
-            List<UsuariosAsigna> lista = new ArrayList<>();
+            ArrayList<UsuariosAsigna> lista = new ArrayList<>();
 
             try {
                 JSONArray jsonArray = new JSONArray(s);
