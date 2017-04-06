@@ -20,10 +20,17 @@ public class AsignaturaFragment extends Fragment {
 
     public static final String KEY = "key";
 
+
+    /** Instancia el fragment con la lista*/
     public static AsignaturaFragment newInstances (ArrayList<UsuariosAsigna> list){
 
+        AsignaturaFragment fragment = new AsignaturaFragment();
 
+        Bundle args = new Bundle();
+        args.putSerializable(KEY,list);
+        fragment.setArguments(args);
 
+        return fragment;
     }
 
 
