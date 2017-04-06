@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class AsignaturaFragment extends Fragment {
 
-    public static ArrayList<UsuariosAsigna> miLista;
+    private static ArrayList<UsuariosAsigna> miLista;
 
 
     /** Instancia el fragmen*/

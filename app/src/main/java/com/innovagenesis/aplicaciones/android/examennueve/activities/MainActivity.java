@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,10 +24,10 @@ import android.view.MenuItem;
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapaterAU;
-import com.innovagenesis.aplicaciones.android.examennueve.asynctask.estudiantes.EstudiantesAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.EstudiantesAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.UsuarioAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.AsignaturaFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesFragment;
-import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
 
 import java.net.MalformedURLException;
@@ -38,10 +37,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        EstudiantesAsyncTask.mDesplegarEstudiantes {
+        EstudiantesAsyncTask.mDesplegarEstudiantes,
+        UsuarioAsyncTask.mDesplegarUsuario {
 
     SharedPreferences preferences;
-    int contenedor;
+    int contenedor = R.id.contenedor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +129,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_estudiante) {
             // Se envía la solicitud asincronica de estudiantes
+            try {
+                new UsuarioAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+
         } else if (id == R.id.nav_tareas) {
             // Se envía la solicitud asincronica de tareas
         }
@@ -152,19 +159,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void DesplegarEstudiantes(ArrayList<UsuariosAsigna> listaUsuarios) {
 
-        contenedor = R.id.contenedor;
-        Fragment fragment = AsignaturaFragment.newInstances(listaUsuarios);
 
-        //mListarDonantes(listaUsuarios);
-        mInstanciarFragment(contenedor,fragment).commit();
+        Fragment fragment = AsignaturaFragment.newInstances(listaUsuarios);
+        mInstanciarFragment(contenedor, fragment).commit();
     }
 
-    public void mListarDonantes(List<UsuariosAsigna> usuariosAsigna) {
-        /** Llena el recyclerView en activity*/
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(this,usuariosAsigna);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    @Override
+    public void DesplegarUsuario(ArrayList<UsuariosAsigna> listaUsuarios) {
+
+        Fragment fragment = EstudiantesFragment.newInstance(listaUsuarios);
+        mInstanciarFragment(contenedor,fragment).commit();
     }
 }
