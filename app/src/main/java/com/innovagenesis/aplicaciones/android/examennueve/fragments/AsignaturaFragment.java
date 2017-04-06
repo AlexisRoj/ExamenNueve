@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.innovagenesis.aplicaciones.android.examennueve.R;
+import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,9 +18,14 @@ import com.innovagenesis.aplicaciones.android.examennueve.R;
 public class AsignaturaFragment extends Fragment {
 
 
-    public AsignaturaFragment() {
-        // Required empty public constructor
+    public static final String KEY = "key";
+
+    public static AsignaturaFragment newInstances (ArrayList<UsuariosAsigna> list){
+
+
+
     }
+
 
 
     @Override

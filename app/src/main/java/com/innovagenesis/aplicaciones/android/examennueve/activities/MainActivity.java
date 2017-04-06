@@ -1,11 +1,15 @@
 package com.innovagenesis.aplicaciones.android.examennueve.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +22,9 @@ import android.view.MenuItem;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
+import com.innovagenesis.aplicaciones.android.examennueve.fragments.AsignaturaFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -97,17 +104,33 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment fragment = null;
+        int contenedor = R.layout.content_main;
 
         if (id == R.id.nav_asignatura) {
-            // Handle the camera action
+            // Se envía la solicitud asincronica de asignaturas
+
+
+
         } else if (id == R.id.nav_estudiante) {
-
+            // Se envía la solicitud asincronica de estudiantes
         } else if (id == R.id.nav_tareas) {
-
+            // Se envía la solicitud asincronica de tareas
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    /**
+     * Método encargado de hacer la carga de todos los fragmentos
+     * */
+    @SuppressLint("CommitTransaction")
+    private FragmentTransaction mInstanciarFragment(int contenedor, Fragment fragment) {
+
+        return getSupportFragmentManager().beginTransaction()
+                .replace(contenedor,fragment);
     }
 }

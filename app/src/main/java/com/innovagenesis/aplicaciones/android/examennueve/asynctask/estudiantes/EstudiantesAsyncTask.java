@@ -91,8 +91,8 @@ public class EstudiantesAsyncTask extends AsyncTask<URL, Integer, String> {
 
                     UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
 
-                    usuariosAsigna.setDescripcion(jsonArray.getJSONObject(i).getString("nom_asignatura"));
-                    usuariosAsigna.setCodigo(jsonArray.getJSONObject(i).getInt("id_asignatura"));
+                    usuariosAsigna.setDescripcion(jsonArray.getJSONObject(i).getString("nom_asigna"));
+                    usuariosAsigna.setCodigo(jsonArray.getJSONObject(i).getInt("id_asigna"));
 
                     lista.add(usuariosAsigna);
                 }

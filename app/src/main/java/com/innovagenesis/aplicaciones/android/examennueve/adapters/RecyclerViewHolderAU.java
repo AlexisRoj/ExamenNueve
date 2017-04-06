@@ -13,7 +13,7 @@ import com.innovagenesis.aplicaciones.android.examennueve.R;
 
 public class RecyclerViewHolderAU extends RecyclerView.ViewHolder {
 
-    private TextView codigo,descripcion;
+    public TextView codigo,descripcion;
 
     public RecyclerViewHolderAU(View itemView) {
         super(itemView);

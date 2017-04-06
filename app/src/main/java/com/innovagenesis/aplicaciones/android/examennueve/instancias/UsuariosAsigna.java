@@ -1,14 +1,16 @@
 package com.innovagenesis.aplicaciones.android.examennueve.instancias;
 
+import java.io.Serializable;
+
 /**
  * Clase encargada de desplegar los usuarios
  * Created by alexi on 04/04/2017.
  */
 
-public class UsuariosAsigna {
+public class UsuariosAsigna implements Serializable{
 
-    private String descripcion;
-    private int codigo;
+    public String descripcion;
+    public int codigo;
 
 
     public UsuariosAsigna() {
