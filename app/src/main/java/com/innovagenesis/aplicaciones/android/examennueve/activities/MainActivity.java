@@ -55,9 +55,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
 
-                DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
-                dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+               /* DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
+                dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);*/
 
+                try {
+                    new AsignaturaAsyncTask(MainActivity.this,2).execute(
+                            new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
 
 
 
@@ -125,8 +131,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_asignatura) {
             // Se envía la solicitud asincronica de asignaturas
+            // El segundo parametro del constructor indica la accion si va a llenar
+            // el spinner o el recycler. 1 = Recycler, 2 = Spinner
             try {
-                new AsignaturaAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+                new AsignaturaAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -162,11 +170,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void DesplegarAsignatura(ArrayList<UsuariosAsigna> listaAsignatura) {
-
-
+    public void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura){
+        // Carga los elementos que van ser enviados al dialogo de agregar tarea
+        // Uso para el spinner
         Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ListaAsignatura",listaAsignatura);
+        fragment.setArguments(bundle);
         mInstanciarFragment(contenedor, fragment).commit();
+    }
+
+    @Override
+    public void DesplegarAsignaturaDialogo(ArrayList<UsuariosAsigna> listaAsignatura) {
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ListaAsignatura",listaAsignatura);
+
+        DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
+        dialogoAgregarTareas.setArguments(bundle);
+        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+
     }
 
 

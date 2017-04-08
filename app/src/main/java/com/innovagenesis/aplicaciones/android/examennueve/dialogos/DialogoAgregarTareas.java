@@ -94,10 +94,6 @@ public class DialogoAgregarTareas extends DialogFragment {
 
             }
 
-
-
-
-
         });
 
         btnCancelarTarea.setOnClickListener(new View.OnClickListener() {

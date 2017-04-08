@@ -29,16 +29,20 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
 
     private Activity activity;
     private ProgressDialog progressDialog;
+    private int evento;
 
     public interface mDesplegarEstudiantes {
-        void DesplegarAsignatura(ArrayList<UsuariosAsigna> listaAsignatura);
+        void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura);
+        void DesplegarAsignaturaDialogo(ArrayList<UsuariosAsigna> listaAsignatura);
     }
 
     private mDesplegarEstudiantes listener;
 
 
-    public AsignaturaAsyncTask(Activity activity) {
+
+    public AsignaturaAsyncTask(Activity activity, int evento) {
         this.activity = activity;
+        this.evento = evento;
         progressDialog = new ProgressDialog(activity);
 
         try {
@@ -104,7 +108,18 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
                 e.printStackTrace();
                 Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
             }
-            listener.DesplegarAsignatura(lista);
+            switch (evento){
+
+                case 1:
+                    //Llena el recycler
+                    listener.DesplegarAsignaturaRecycler(lista);
+                    break;
+                case 2:
+                    //Llena el spinner
+                    listener.DesplegarAsignaturaDialogo(lista);
+                    break;
+            }
+
         }
     }
 }
