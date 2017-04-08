@@ -9,14 +9,14 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
-import com.innovagenesis.aplicaciones.android.examennueve.dialogos.LoginDialogo;
+import com.innovagenesis.aplicaciones.android.examennueve.dialogos.DialogoLogin;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.login.ConsultarLoginAsync;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Login extends AppCompatActivity implements LoginDialogo.DatosHacerLogin,
+public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerLogin,
         ConsultarLoginAsync.ValidarLoginUsuario {
 
     private SharedPreferences preferences;
@@ -39,9 +39,9 @@ public class Login extends AppCompatActivity implements LoginDialogo.DatosHacerL
         if (usuario != null && contrasena != null)
             mLoginUsuario(usuario, contrasena);
 
-        LoginDialogo loginDialogo = new LoginDialogo();
-        loginDialogo.setCancelable(false); // Evita que se cierre el dialogo
-        loginDialogo.show(getSupportFragmentManager(), LoginDialogo.TAG);
+        DialogoLogin dialogoLogin = new DialogoLogin();
+        dialogoLogin.setCancelable(false); // Evita que se cierre el dialogo
+        dialogoLogin.show(getSupportFragmentManager(), DialogoLogin.TAG);
 
         this.setTitle("Ingreso al sistema");
 
@@ -52,7 +52,7 @@ public class Login extends AppCompatActivity implements LoginDialogo.DatosHacerL
 
 
     @Override
-    public void hacerLogin(String usuario, String contrasena, Boolean recordar) {
+    public void HacerLogin(String usuario, String contrasena, Boolean recordar) {
         // envia a consultar los datos atrapados del login y sus campos
 
         recordarLogin = recordar;

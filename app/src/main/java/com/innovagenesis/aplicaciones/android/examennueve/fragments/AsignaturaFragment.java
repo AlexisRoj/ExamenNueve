@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,11 +28,11 @@ public class AsignaturaFragment extends Fragment {
     private static ArrayList<UsuariosAsigna> miLista;
 
 
-    /** Instancia el fragmen*/
+    /** Instancia el fragment*/
     public static AsignaturaFragment newInstances (ArrayList<UsuariosAsigna> list){
 
         AsignaturaFragment fragment = new AsignaturaFragment();
-        miLista = list;
+        miLista = list; //asigna la lista
         return fragment;
     }
 
@@ -48,19 +49,15 @@ public class AsignaturaFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getContext(),miLista);
-        recyclerView.setAdapter(adapter);
+        //Instancia el recyclerView
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_listAsigna);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2,
+                GridLayoutManager.VERTICAL, false));
+        RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getActivity(),miLista);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
-    }
-
-    public void mListarDonantes(List<UsuariosAsigna> usuariosAsigna) {
-        /** Llena el recyclerView en activity*/
+        recyclerView.setAdapter(adapter);
 
     }
+
 }

@@ -17,6 +17,7 @@ import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsi
 import java.util.ArrayList;
 
 /**
+ * Clase encargada de listar los usurios
  * A simple {@link Fragment} subclass.
  */
 public class EstudiantesFragment extends Fragment {
@@ -47,6 +48,7 @@ public class EstudiantesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /*Instancia el ReciclerView*/
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewEstudiante);
         RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getContext(),miLista);
         recyclerView.setAdapter(adapter);

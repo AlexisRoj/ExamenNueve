@@ -19,4 +19,9 @@
     <string name="codigo">codigo</string>
     <string name="descripcion">Descripcion</string>
     <string name="errorJSON">Error al decodificar json respuesta</string>
+    <string name="agregar_tareas">Agregar Tareas</string>
+    <string name="nombre_tarea">Nombre tarea</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="nota">Nota</string>
 </resources>

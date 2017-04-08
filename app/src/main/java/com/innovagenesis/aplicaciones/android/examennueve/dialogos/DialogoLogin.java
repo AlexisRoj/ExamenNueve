@@ -23,7 +23,7 @@ import com.innovagenesis.aplicaciones.android.examennueve.R;
  * Created by alexi on 01/04/2017.
  */
 
-public class LoginDialogo extends DialogFragment {
+public class DialogoLogin extends DialogFragment {
 
     public static final String TAG = "dialogo_inicio_sesión";
 
@@ -33,7 +33,7 @@ public class LoginDialogo extends DialogFragment {
     private CheckBox checkBoxRecordar;
 
     public interface DatosHacerLogin {
-        void hacerLogin(String usuario, String contrasena, Boolean recordar);
+        void HacerLogin(String usuario, String contrasena, Boolean recordar);
     }
 
     private DatosHacerLogin listener;
@@ -90,7 +90,7 @@ public class LoginDialogo extends DialogFragment {
                 mValidarTextInput(textInputPass, errorPass);
 
                 if (enviarInterface)
-                    listener.hacerLogin(nombreUsuario, contrasenaUsuario, recordarLogin);
+                    listener.HacerLogin(nombreUsuario, contrasenaUsuario, recordarLogin);
             }
         });
         btnSalirogin.setOnClickListener(new View.OnClickListener() {

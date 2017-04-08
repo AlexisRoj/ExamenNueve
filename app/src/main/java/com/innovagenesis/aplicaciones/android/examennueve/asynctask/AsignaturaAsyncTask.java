@@ -25,19 +25,19 @@ import java.util.ArrayList;
  * Created by alexi on 04/04/2017.
  */
 
-public class EstudiantesAsyncTask extends AsyncTask<URL, Integer, String> {
+public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
 
     private Activity activity;
     private ProgressDialog progressDialog;
 
     public interface mDesplegarEstudiantes {
-        void DesplegarEstudiantes(ArrayList<UsuariosAsigna> listaUsuarios);
+        void DesplegarAsignatura(ArrayList<UsuariosAsigna> listaAsignatura);
     }
 
     private mDesplegarEstudiantes listener;
 
 
-    public EstudiantesAsyncTask(Activity activity) {
+    public AsignaturaAsyncTask(Activity activity) {
         this.activity = activity;
         progressDialog = new ProgressDialog(activity);
 
@@ -45,7 +45,7 @@ public class EstudiantesAsyncTask extends AsyncTask<URL, Integer, String> {
             listener = (mDesplegarEstudiantes) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException
-                    ("La interface EstudiantesAsyncTask no ha sido implementada");
+                    ("La interface AsignaturaAsyncTask no ha sido implementada");
         }
     }
 
@@ -104,7 +104,7 @@ public class EstudiantesAsyncTask extends AsyncTask<URL, Integer, String> {
                 e.printStackTrace();
                 Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
             }
-            listener.DesplegarEstudiantes(lista);
+            listener.DesplegarAsignatura(lista);
         }
     }
 }

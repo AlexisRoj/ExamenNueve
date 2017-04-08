@@ -9,8 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,9 +21,9 @@ import android.view.MenuItem;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
-import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapaterAU;
-import com.innovagenesis.aplicaciones.android.examennueve.asynctask.EstudiantesAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.AsignaturaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.UsuarioAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.dialogos.DialogoAgregarTareas;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.AsignaturaFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
@@ -33,11 +31,10 @@ import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsi
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        EstudiantesAsyncTask.mDesplegarEstudiantes,
+        AsignaturaAsyncTask.mDesplegarEstudiantes,
         UsuarioAsyncTask.mDesplegarUsuario {
 
     SharedPreferences preferences;
@@ -56,6 +53,14 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
+                dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+
+
+
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -121,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_asignatura) {
             // Se envía la solicitud asincronica de asignaturas
             try {
-                new EstudiantesAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+                new AsignaturaAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -157,10 +162,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void DesplegarEstudiantes(ArrayList<UsuariosAsigna> listaUsuarios) {
+    public void DesplegarAsignatura(ArrayList<UsuariosAsigna> listaAsignatura) {
 
 
-        Fragment fragment = AsignaturaFragment.newInstances(listaUsuarios);
+        Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
         mInstanciarFragment(contenedor, fragment).commit();
     }
 
