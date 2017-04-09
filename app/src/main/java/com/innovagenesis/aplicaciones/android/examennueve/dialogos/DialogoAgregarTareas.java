@@ -13,10 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
-
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
-import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 
 import java.util.ArrayList;
 
@@ -28,25 +29,29 @@ import java.util.ArrayList;
 public class DialogoAgregarTareas extends DialogFragment {
 
     public static final String TAG = "dialogo_agregar_tarea";
+    public static String jsonAsigna = "json_asigna";
     public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
+
 
     private interface DatosGuardarTarea {
         void GuardarTarea(Tareas tareas);
     }
 
 
-    public static DialogoAgregarTareas newInstance(ArrayList<UsuariosAsigna> list){
+    public static DialogoAgregarTareas newInstance(String jsonAsignatura){
 
         DialogoAgregarTareas fragment = new DialogoAgregarTareas();
 
-
         argumentos = new Bundle();
-        argumentos.putSerializable("list",list);
+        argumentos.putString(jsonAsigna,jsonAsignatura);
         fragment.setArguments(argumentos);
 
         return fragment;
     }
+
+
+
 
     public DatosGuardarTarea listener;
 
@@ -74,21 +79,31 @@ public class DialogoAgregarTareas extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
 
+        nombreTarea = argumentos.getString(jsonAsigna);
 
-        ArrayList<UsuariosAsigna> miLista = new ArrayList<>();
-        miLista = (ArrayList<UsuariosAsigna>) argumentos.getSerializable("list");
+        try {
+            /*
+             * Seccion encargada de deserializar el json de asignatura
+             * se utilizan dos arrglos por uno es para mostrar y el
+             * otro es para guardar los datos, es el codigo
+             * */
+
+            JSONArray json = new JSONArray(nombreTarea);
+            ArrayList<String> nombreAsigna = new ArrayList<>();
+            ArrayList<Integer> codAsigna = new ArrayList<>();
+
+            for (int i = 0; i< json.length(); i++){
+
+                nombreAsigna.add(json.getJSONObject(i).getString("nom_asigna"));
+                codAsigna.add(Integer.valueOf(json.getJSONObject(i).getString("cod_asigna")));
+            }
 
 
-        /*******************************************/
 
-        for (int i = 0; i< miLista.size(); i++){
 
-            i= i +1;
-
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-
-
 
 
         spinnerAsignatura = (Spinner) view.findViewById(R.id.spinner_selecionar_asignatura);

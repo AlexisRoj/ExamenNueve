@@ -174,18 +174,20 @@ public class MainActivity extends AppCompatActivity
         // Carga los elementos que van ser enviados al dialogo de agregar tarea
         // Uso para el spinner
         Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("ListaAsignatura",listaAsignatura);
-        fragment.setArguments(bundle);
         mInstanciarFragment(contenedor, fragment).commit();
     }
 
     @Override
-    public void DesplegarAsignaturaDialogo(ArrayList<UsuariosAsigna> listaAsignatura) {
+    public void DesplegarAsignaturaDialogo(String jsonAsigna) {
 
 
-        DialogoAgregarTareas dialogoAgregarTareas =DialogoAgregarTareas.newInstance(listaAsignatura);
+
+        DialogoAgregarTareas dialogoAgregarTareas = DialogoAgregarTareas.newInstance(jsonAsigna);
         dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+
+
+        /*DialogoAgregarTareas dialogoAgregarTareas =DialogoAgregarTareas.newInstance(json);
+        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);*/
 
     }
 

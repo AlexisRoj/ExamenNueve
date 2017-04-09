@@ -33,7 +33,7 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
 
     public interface mDesplegarEstudiantes {
         void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura);
-        void DesplegarAsignaturaDialogo(ArrayList<UsuariosAsigna> listaAsignatura);
+        void DesplegarAsignaturaDialogo(String jsonAsigna);
     }
 
     private mDesplegarEstudiantes listener;
@@ -115,8 +115,8 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
                     listener.DesplegarAsignaturaRecycler(lista);
                     break;
                 case 2:
-                    //Llena el spinner
-                    listener.DesplegarAsignaturaDialogo(lista);
+                    //Pasa el json para ser deserializado en otra parte
+                    listener.DesplegarAsignaturaDialogo(s);
                     break;
             }
 

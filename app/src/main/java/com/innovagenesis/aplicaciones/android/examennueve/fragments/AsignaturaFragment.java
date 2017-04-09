@@ -36,8 +36,6 @@ public class AsignaturaFragment extends Fragment {
         bundle = new Bundle();
         bundle.putSerializable("list",list);
         fragment.setArguments(bundle);
-
-        //miLista = list; //asigna la lista*/
         return fragment;
     }
 

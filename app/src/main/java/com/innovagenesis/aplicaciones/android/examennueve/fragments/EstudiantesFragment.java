@@ -22,6 +22,8 @@ import java.util.ArrayList;
  */
 public class EstudiantesFragment extends Fragment {
 
+    public static Bundle bundle;
+    public static String listFragmentEstudiante = "list_estudiante";
     private static ArrayList<UsuariosAsigna> miLista;
 
     public EstudiantesFragment() {
@@ -32,7 +34,10 @@ public class EstudiantesFragment extends Fragment {
 
         EstudiantesFragment fragment = new EstudiantesFragment();
 
-        miLista = list;
+        bundle = new Bundle();
+        bundle.putSerializable("list",list);
+        fragment.setArguments(bundle);
+
         return fragment;
     }
 
@@ -49,6 +54,7 @@ public class EstudiantesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /*Instancia el ReciclerView*/
+        miLista= (ArrayList<UsuariosAsigna>) bundle.getSerializable("list");
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewEstudiante);
         RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getContext(),miLista);
         recyclerView.setAdapter(adapter);
