@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
 
-               /* DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
-                dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);*/
+               /* mDialogoAgregarTareas dialogoAgregarTareas = new mDialogoAgregarTareas();
+                dialogoAgregarTareas.show(getSupportFragmentManager(),mDialogoAgregarTareas.TAG);*/
 
                 try {
                     new AsignaturaAsyncTask(MainActivity.this,2).execute(
@@ -183,11 +183,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void DesplegarAsignaturaDialogo(ArrayList<UsuariosAsigna> listaAsignatura) {
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("ListaAsignatura",listaAsignatura);
 
-        DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
-        dialogoAgregarTareas.setArguments(bundle);
+        DialogoAgregarTareas dialogoAgregarTareas =DialogoAgregarTareas.newInstance(listaAsignatura);
         dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
 
     }

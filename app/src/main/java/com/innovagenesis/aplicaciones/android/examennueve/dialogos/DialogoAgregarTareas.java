@@ -16,6 +16,9 @@ import android.widget.Spinner;
 
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
+import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+
+import java.util.ArrayList;
 
 /**
  * Dialogo encargado de realizar el ingreso de tareas
@@ -26,9 +29,23 @@ public class DialogoAgregarTareas extends DialogFragment {
 
     public static final String TAG = "dialogo_agregar_tarea";
     public String nombreTarea = "nombre_tarea";
+    private static Bundle argumentos;
 
     private interface DatosGuardarTarea {
         void GuardarTarea(Tareas tareas);
+    }
+
+
+    public static DialogoAgregarTareas newInstance(ArrayList<UsuariosAsigna> list){
+
+        DialogoAgregarTareas fragment = new DialogoAgregarTareas();
+
+
+        argumentos = new Bundle();
+        argumentos.putSerializable("list",list);
+        fragment.setArguments(argumentos);
+
+        return fragment;
     }
 
     public DatosGuardarTarea listener;
@@ -56,6 +73,23 @@ public class DialogoAgregarTareas extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
+
+
+        ArrayList<UsuariosAsigna> miLista = new ArrayList<>();
+        miLista = (ArrayList<UsuariosAsigna>) argumentos.getSerializable("list");
+
+
+        /*******************************************/
+
+        for (int i = 0; i< miLista.size(); i++){
+
+            i= i +1;
+
+        }
+
+
+
+
 
         spinnerAsignatura = (Spinner) view.findViewById(R.id.spinner_selecionar_asignatura);
         spinnerEstudiante = (Spinner) view.findViewById(R.id.spinner_selecionar_estudiante);
