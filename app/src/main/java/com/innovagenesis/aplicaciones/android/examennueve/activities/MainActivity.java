@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences preferences;
     int contenedor = R.id.contenedor;
+    private String jsonAsignatura;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_estudiante) {
             // Se envía la solicitud asincronica de estudiantes
             try {
-                new UsuarioAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+                new UsuarioAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -180,22 +181,32 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void DesplegarAsignaturaDialogo(String jsonAsigna) {
 
+        // Reserva el resultado de la primer consulta ejecutada desde el boton
+        // y ejecuta segunda consulta para llenar spinner
+        jsonAsignatura = jsonAsigna;
 
+        try {
+            new UsuarioAsyncTask(this,2).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
-        DialogoAgregarTareas dialogoAgregarTareas = DialogoAgregarTareas.newInstance(jsonAsigna);
-        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
-
-
-        /*DialogoAgregarTareas dialogoAgregarTareas =DialogoAgregarTareas.newInstance(json);
-        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);*/
 
     }
 
 
     @Override
-    public void DesplegarUsuario(ArrayList<UsuariosAsigna> listaUsuarios) {
+    public void DesplegarUsuarioRecycler(ArrayList<UsuariosAsigna> listaUsuarios) {
 
         Fragment fragment = EstudiantesFragment.newInstance(listaUsuarios);
         mInstanciarFragment(contenedor,fragment).commit();
+    }
+
+    @Override
+    public void DesplegarUsuarioDialogo(String jsonEstudiante) {
+
+        DialogoAgregarTareas dialogoAgregarTareas = DialogoAgregarTareas.newInstance(jsonEstudiante,jsonAsignatura);
+        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+
     }
 }

@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
+
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -30,7 +32,9 @@ public class DialogoAgregarTareas extends DialogFragment {
 
     public static final String TAG = "dialogo_agregar_tarea";
     public static String jsonAsigna = "json_asigna";
+    public static String jsonEstu = "json_estudiante";
     public String nombreTarea = "nombre_tarea";
+    private String deserializaAsinga, deserializaEstud;
     private static Bundle argumentos;
 
 
@@ -39,18 +43,17 @@ public class DialogoAgregarTareas extends DialogFragment {
     }
 
 
-    public static DialogoAgregarTareas newInstance(String jsonAsignatura){
+    public static DialogoAgregarTareas newInstance(String jsonEstudiante, String jsonAsignatura) {
 
         DialogoAgregarTareas fragment = new DialogoAgregarTareas();
 
         argumentos = new Bundle();
-        argumentos.putString(jsonAsigna,jsonAsignatura);
+        argumentos.putString(jsonAsigna, jsonAsignatura);
+        argumentos.putString(jsonEstu,jsonEstudiante);
         fragment.setArguments(argumentos);
 
         return fragment;
     }
-
-
 
 
     public DatosGuardarTarea listener;
@@ -67,7 +70,6 @@ public class DialogoAgregarTareas extends DialogFragment {
     private TextInputLayout textInputLayoutNota;
 
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -79,7 +81,8 @@ public class DialogoAgregarTareas extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
 
-        nombreTarea = argumentos.getString(jsonAsigna);
+        deserializaAsinga = argumentos.getString(jsonAsigna);
+        deserializaEstud = argumentos.getString(jsonEstu);
 
         try {
             /*
@@ -87,20 +90,31 @@ public class DialogoAgregarTareas extends DialogFragment {
              * se utilizan dos arrglos por uno es para mostrar y el
              * otro es para guardar los datos, es el codigo
              * */
-
-            JSONArray json = new JSONArray(nombreTarea);
+            JSONArray jsonAsina = new JSONArray(deserializaAsinga);
             ArrayList<String> nombreAsigna = new ArrayList<>();
             ArrayList<Integer> codAsigna = new ArrayList<>();
 
-            for (int i = 0; i< json.length(); i++){
+            for (int i = 0; i < jsonAsina.length(); i++) {
 
-                nombreAsigna.add(json.getJSONObject(i).getString("nom_asigna"));
-                codAsigna.add(Integer.valueOf(json.getJSONObject(i).getString("cod_asigna")));
+                nombreAsigna.add(jsonAsina.getJSONObject(i).getString("nom_asigna"));
+                codAsigna.add(Integer.valueOf(jsonAsina.getJSONObject(i).getString("id_asigna")));
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
+        try {
+            JSONArray jsonEstu = new JSONArray(deserializaEstud);
+            ArrayList<String> nombreEstu = new ArrayList<>();
+            ArrayList<Integer> codEstu = new ArrayList<>();
 
+            for (int i = 0; i<jsonEstu.length(); i++){
 
+                nombreEstu.add(jsonEstu.getJSONObject(i).getString("nom_usuario"));
+                codEstu.add(Integer.valueOf(jsonEstu.getJSONObject(i).getString("ced_usuario")));
+
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

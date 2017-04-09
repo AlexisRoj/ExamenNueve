@@ -22,17 +22,21 @@ public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
 
     private ProgressDialog progressDialog;
     private Activity activity;
+    private int evento;
+
 
 
     public interface mDesplegarUsuario {
-        void DesplegarUsuario(ArrayList<UsuariosAsigna> listaUsuarios);
+        void DesplegarUsuarioRecycler(ArrayList<UsuariosAsigna> listaUsuarios);
+        void DesplegarUsuarioDialogo (String jsonEstudiante);
     }
 
     private mDesplegarUsuario listener;
 
 
-    public UsuarioAsyncTask(Activity activity) {
+    public UsuarioAsyncTask(Activity activity, int evento) {
         this.activity = activity;
+        this.evento = evento;
         progressDialog = new ProgressDialog(activity);
 
         try {
@@ -92,7 +96,15 @@ public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
                 lista.add(usuariosAsigna);
             }
 
-            listener.DesplegarUsuario(lista);
+            switch (evento){
+
+                case 1:
+                    listener.DesplegarUsuarioRecycler(lista);
+                    break;
+                case 2:
+                    listener.DesplegarUsuarioDialogo(s);
+                    break;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
