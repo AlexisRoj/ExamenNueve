@@ -24,4 +24,6 @@
     <string name="cancelar">Cancelar</string>
     <string name="ingresar">Ingresar</string>
     <string name="nota">Nota</string>
+    <string name="spinerMateria">Selecione una materia</string>
+    <string name="selectEstudiante">Selecione un estudiante</string>
 </resources>
