@@ -83,31 +83,33 @@ public class ListarUsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
 
         ArrayList<UsuariosAsigna> lista = new ArrayList<>();
 
-        try {
-            JSONArray jsonArray = new JSONArray(s);
+        switch (evento){
+            // dependiendo el evento solicitado deserializa o envia el
+            // json completo
+            case 1:
 
-            for (int i =0; i< jsonArray.length(); i++){
+                try {
+                    JSONArray jsonArray = new JSONArray(s);
 
-                UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
+                    for (int i =0; i< jsonArray.length(); i++){
 
-                usuariosAsigna.descripcion =jsonArray.getJSONObject(i).getString("nom_usuario");
-                usuariosAsigna.codigo = jsonArray.getJSONObject(i).getInt("ced_usuario");
+                        UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
 
-                lista.add(usuariosAsigna);
-            }
+                        usuariosAsigna.descripcion =jsonArray.getJSONObject(i).getString("nom_usuario");
+                        usuariosAsigna.codigo = jsonArray.getJSONObject(i).getInt("ced_usuario");
 
-            switch (evento){
+                        lista.add(usuariosAsigna);
+                    }
 
-                case 1:
-                    listener.DesplegarUsuarioRecycler(lista);
-                    break;
-                case 2:
-                    listener.DesplegarUsuarioDialogo(s);
-                    break;
-            }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+                listener.DesplegarUsuarioRecycler(lista);
+                break;
+            case 2:
+                listener.DesplegarUsuarioDialogo(s);
+                break;
         }
 
 

@@ -25,16 +25,16 @@ import java.util.ArrayList;
  * Created by alexi on 10/04/2017.
  */
 
-public class ListarTareasAsyncTask extends AsyncTask<URL,Integer,String>{
+public class ListarTareasAsyncTask extends AsyncTask<URL, Integer, String> {
 
 
     private ProgressDialog progressDialog;
     private Activity activity;
-    private int envento;
+    private int evento;
 
-    public ListarTareasAsyncTask(Activity activity, int envento) {
+    public ListarTareasAsyncTask(Activity activity, int evento) {
         this.activity = activity;
-        this.envento = envento;
+        this.evento = evento;
         progressDialog = new ProgressDialog(activity);
 
         try {
@@ -47,10 +47,11 @@ public class ListarTareasAsyncTask extends AsyncTask<URL,Integer,String>{
     }
 
 
-    public interface mDesplegarTareas{
+    public interface mDesplegarTareas {
 
-        void DesplegarTareaRecycler (ArrayList<ListarTareasAsyncTask> listarTareasAsyncTasks);
-        void DesplegarTareaDialogo (String jsonTarea);
+        void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks);
+
+        void DesplegarTareaDialogo(String jsonTarea);
     }
 
     private mDesplegarTareas listener;
@@ -61,13 +62,13 @@ public class ListarTareasAsyncTask extends AsyncTask<URL,Integer,String>{
         HttpURLConnection connection = null;
 
         try {
-            connection = (HttpURLConnection)params[0].openConnection();
+            connection = (HttpURLConnection) params[0].openConnection();
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
             return reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             assert connection != null;
             connection.disconnect();
         }
@@ -88,31 +89,40 @@ public class ListarTareasAsyncTask extends AsyncTask<URL,Integer,String>{
         if (progressDialog.isShowing())
             progressDialog.dismiss();
 
-        Toast.makeText(activity,"mensaje",Toast.LENGTH_SHORT).show();;
-
         ArrayList<Tareas> lista = new ArrayList<>();
 
-        try {
+        switch (evento) {
 
-            JSONArray jsonArray = new JSONArray(s);
+            case 1:{
+                //Carga el fragmento
 
-            for (int i = 0; i< jsonArray.length(); i++){
+                try {
 
-                Tareas tareas = new Tareas();
+                    JSONArray jsonArray = new JSONArray(s);
 
-                tareas.setNomTarea(jsonArray.getJSONObject(i).getString("nom_tarea"));
-                tareas.setNomAsignaTarea(jsonArray.getJSONObject(i).getString("nom_asigna_tarea"));
-                tareas.setNomEstuTarea(jsonArray.getJSONObject(i).getString("nom_usuario_tarea"));
-                tareas.setNotaTarea(Integer.valueOf(jsonArray.getJSONObject(i).getString("nota_tarea")));
+                    for (int i = 0; i< jsonArray.length(); i++){
 
-                lista.add(tareas);
+                        Tareas tareas = new Tareas();
+
+                        tareas.setNomTarea(jsonArray.getJSONObject(i).getString("nom_tarea"));
+                        tareas.setNomAsignaTarea(jsonArray.getJSONObject(i).getString("nom_asigna_tarea"));
+                        tareas.setNomEstuTarea(jsonArray.getJSONObject(i).getString("nom_usuario_tarea"));
+                        tareas.setNotaTarea(Integer.valueOf(jsonArray.getJSONObject(i).getString("nota_tarea")));
+
+                        lista.add(tareas);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
+                }
+                listener.DesplegarTareaRecycler(lista);
+                break;
             }
 
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            case 2:
+                //Valida si ya existe la tarea
+                listener.DesplegarTareaDialogo(s);
+                break;
         }
-
     }
 }

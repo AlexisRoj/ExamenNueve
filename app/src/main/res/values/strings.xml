@@ -26,4 +26,6 @@
     <string name="nota">Nota</string>
     <string name="spinerMateria">Selecione una materia</string>
     <string name="selectEstudiante">Selecione un estudiante</string>
+    <string name="editar">editar</string>
+    <string name="borrar">borrar</string>
 </resources>

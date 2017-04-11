@@ -92,25 +92,28 @@ public class ListarAsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
             //LLena la lista con el json
             ArrayList<UsuariosAsigna> lista = new ArrayList<>();
 
-            try {
-                JSONArray jsonArray = new JSONArray(s);
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-
-                    UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
-
-                    usuariosAsigna.setDescripcion(jsonArray.getJSONObject(i).getString("nom_asigna"));
-                    usuariosAsigna.setCodigo(jsonArray.getJSONObject(i).getInt("id_asigna"));
-
-                    lista.add(usuariosAsigna);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
-            }
             switch (evento){
 
                 case 1:
+
+                    try {
+                        JSONArray jsonArray = new JSONArray(s);
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+
+                            UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
+
+                            usuariosAsigna.setDescripcion(jsonArray.getJSONObject(i).getString("nom_asigna"));
+                            usuariosAsigna.setCodigo(jsonArray.getJSONObject(i).getInt("id_asigna"));
+
+                            lista.add(usuariosAsigna);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
+                    }
+
+
                     //Llena el recycler
                     listener.DesplegarAsignaturaRecycler(lista);
                     break;

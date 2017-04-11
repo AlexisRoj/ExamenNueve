@@ -27,6 +27,8 @@ import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarUsuari
 import com.innovagenesis.aplicaciones.android.examennueve.dialogos.DialogoAgregarTareas;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.AsignaturaFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
 
 import java.net.MalformedURLException;
@@ -154,6 +156,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_tareas) {
             // Se envía la solicitud asincronica de tareas
+
+            try {
+                new ListarTareasAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -204,30 +212,35 @@ public class MainActivity extends AppCompatActivity
         mInstanciarFragment(contenedor,fragment).commit();
     }
 
+    String jsonEstudiante;
+
     @Override
-    public void DesplegarUsuarioDialogo(String jsonEstudiante) {
+    public void DesplegarUsuarioDialogo(String jsonEstud) {
 
-
+        jsonEstudiante = jsonEstud;
         try {
-            new ListarTareasAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+            new ListarTareasAsyncTask(this,2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-/*
-
-        DialogoAgregarTareas dialogoAgregarTareas = DialogoAgregarTareas.newInstance(jsonEstudiante,jsonAsignatura);
-        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
-*/
 
     }
 
     @Override
-    public void DesplegarTareaRecycler(ArrayList<ListarTareasAsyncTask> listarTareasAsyncTasks) {
+    public void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks) {
+
+        Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
+        mInstanciarFragment(contenedor,fragment).commit();
 
     }
 
     @Override
     public void DesplegarTareaDialogo(String jsonTarea) {
+
+        DialogoAgregarTareas dialogoAgregarTareas =
+                DialogoAgregarTareas.newInstance(jsonEstudiante,jsonAsignatura, jsonTarea);
+        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+
 
     }
 }

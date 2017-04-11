@@ -19,10 +19,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.util.ArrayList;
 
 
@@ -36,6 +39,7 @@ public class DialogoAgregarTareas extends DialogFragment {
     public static final String TAG = "dialogo_agregar_tarea";
     public static String jsonAsigna = "json_asigna";
     public static String jsonEstu = "json_estudiante";
+    public static String jsonTare = "json_tarea";
     public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
     /**
@@ -53,13 +57,15 @@ public class DialogoAgregarTareas extends DialogFragment {
     /**
      * Recibe dos json los cuales despues los deserializa para llenar los spinner
      */
-    public static DialogoAgregarTareas newInstance(String jsonEstudiante, String jsonAsignatura) {
+    public static DialogoAgregarTareas newInstance
+    (String jsonEstudiante, String jsonAsignatura, String jsonTarea) {
 
         DialogoAgregarTareas fragment = new DialogoAgregarTareas();
 
         argumentos = new Bundle();
         argumentos.putString(jsonAsigna, jsonAsignatura);
         argumentos.putString(jsonEstu, jsonEstudiante);
+        argumentos.putString(jsonTare, jsonTarea);
         fragment.setArguments(argumentos);
 
         return fragment;
@@ -120,7 +126,6 @@ public class DialogoAgregarTareas extends DialogFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
 
         try {
@@ -213,7 +218,7 @@ public class DialogoAgregarTareas extends DialogFragment {
         /* Spinner Usuario o Estudiante*/
 
         ArrayAdapter<String> stringArrayAdapterEstu = new ArrayAdapter<String>
-                (getActivity(),R.layout.spinner_item,nombreEstu){
+                (getActivity(), R.layout.spinner_item, nombreEstu) {
 
             @Override
             public boolean isEnabled(int position) {
@@ -223,8 +228,8 @@ public class DialogoAgregarTareas extends DialogFragment {
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-                View view1 =  super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView)view1;
+                View view1 = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view1;
 
                 if (position == 0) {
                     /** Funciona para efecto visual de un elemento del spinner*/
@@ -239,15 +244,18 @@ public class DialogoAgregarTareas extends DialogFragment {
         final String[] codEstudiante = new String[1];
 
         spinnerEstudiante.setAdapter(stringArrayAdapterEstu);
-        spinnerEstudiante.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinnerEstudiante.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 codEstudiante[0] = codEstu.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-
 
 
         /* Seccion de los botones del dialgo */
