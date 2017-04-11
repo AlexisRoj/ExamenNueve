@@ -3,10 +3,14 @@ package com.innovagenesis.aplicaciones.android.examennueve.asynctask;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.Toast;
+
 import com.innovagenesis.aplicaciones.android.examennueve.R;
-import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,39 +18,42 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**Clase encargada de realizar el proceso de extraccion de usuarios
- * Created by alexi on 06/04/2017.
+/**
+ * Clase encargada de realizar el listado de las tareas
+ * almacenadas en la base de datos, tambien cumple
+ * la funcion de verificar que un nombre de tarea sea unico
+ * Created by alexi on 10/04/2017.
  */
 
-public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
+public class ListarTareasAsyncTask extends AsyncTask<URL,Integer,String>{
+
 
     private ProgressDialog progressDialog;
     private Activity activity;
-    private int evento;
+    private int envento;
 
-
-
-    public interface mDesplegarUsuario {
-        void DesplegarUsuarioRecycler(ArrayList<UsuariosAsigna> listaUsuarios);
-        void DesplegarUsuarioDialogo (String jsonEstudiante);
-    }
-
-    private mDesplegarUsuario listener;
-
-
-    public UsuarioAsyncTask(Activity activity, int evento) {
+    public ListarTareasAsyncTask(Activity activity, int envento) {
         this.activity = activity;
-        this.evento = evento;
+        this.envento = envento;
         progressDialog = new ProgressDialog(activity);
 
         try {
-            listener = (mDesplegarUsuario)activity;
+            listener = (mDesplegarTareas) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException
-                    ("La interface UsuarioAsyncTask no ha sido implementada");
+                    ("La interface ListarUsuarioAsyncTask no ha sido implementada");
         }
 
     }
+
+
+    public interface mDesplegarTareas{
+
+        void DesplegarTareaRecycler (ArrayList<ListarTareasAsyncTask> listarTareasAsyncTasks);
+        void DesplegarTareaDialogo (String jsonTarea);
+    }
+
+    private mDesplegarTareas listener;
 
     @Override
     protected String doInBackground(URL... params) {
@@ -55,13 +62,13 @@ public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
 
         try {
             connection = (HttpURLConnection)params[0].openConnection();
-
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
             return reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
+            assert connection != null;
             connection.disconnect();
         }
         return null;
@@ -81,35 +88,31 @@ public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
         if (progressDialog.isShowing())
             progressDialog.dismiss();
 
-        ArrayList<UsuariosAsigna> lista = new ArrayList<>();
+        Toast.makeText(activity,"mensaje",Toast.LENGTH_SHORT).show();;
+
+        ArrayList<Tareas> lista = new ArrayList<>();
 
         try {
+
             JSONArray jsonArray = new JSONArray(s);
 
-            for (int i =0; i< jsonArray.length(); i++){
+            for (int i = 0; i< jsonArray.length(); i++){
 
-                UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
+                Tareas tareas = new Tareas();
 
-                usuariosAsigna.descripcion =jsonArray.getJSONObject(i).getString("nom_usuario");
-                usuariosAsigna.codigo = jsonArray.getJSONObject(i).getInt("ced_usuario");
+                tareas.setNomTarea(jsonArray.getJSONObject(i).getString("nom_tarea"));
+                tareas.setNomAsignaTarea(jsonArray.getJSONObject(i).getString("nom_asigna_tarea"));
+                tareas.setNomEstuTarea(jsonArray.getJSONObject(i).getString("nom_usuario_tarea"));
+                tareas.setNotaTarea(Integer.valueOf(jsonArray.getJSONObject(i).getString("nota_tarea")));
 
-                lista.add(usuariosAsigna);
+                lista.add(tareas);
             }
 
-            switch (evento){
 
-                case 1:
-                    listener.DesplegarUsuarioRecycler(lista);
-                    break;
-                case 2:
-                    listener.DesplegarUsuarioDialogo(s);
-                    break;
-            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
     }
 }

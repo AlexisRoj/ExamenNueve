@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Created by alexi on 04/04/2017.
  */
 
-public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
+public class ListarAsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
 
     private Activity activity;
     private ProgressDialog progressDialog;
@@ -40,7 +40,7 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
 
 
 
-    public AsignaturaAsyncTask(Activity activity, int evento) {
+    public ListarAsignaturaAsyncTask(Activity activity, int evento) {
         this.activity = activity;
         this.evento = evento;
         progressDialog = new ProgressDialog(activity);
@@ -49,7 +49,7 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
             listener = (mDesplegarEstudiantes) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException
-                    ("La interface AsignaturaAsyncTask no ha sido implementada");
+                    ("La interface ListarAsignaturaAsyncTask no ha sido implementada");
         }
     }
 

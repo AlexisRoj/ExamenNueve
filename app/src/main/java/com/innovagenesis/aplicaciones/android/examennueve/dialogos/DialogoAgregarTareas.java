@@ -38,21 +38,17 @@ public class DialogoAgregarTareas extends DialogFragment {
     public static String jsonEstu = "json_estudiante";
     public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
-
     /**
      * Spinners y Json
      */
-
     private ArrayList<String> nombreAsigna;
     private ArrayList<String> codAsigna;
     private ArrayList<String> nombreEstu;
     private ArrayList<String> codEstu;
 
-
     private interface DatosGuardarTarea {
         void GuardarTarea(Tareas tareas);
     }
-
 
     /**
      * Recibe dos json los cuales despues los deserializa para llenar los spinner
@@ -240,7 +236,18 @@ public class DialogoAgregarTareas extends DialogFragment {
             }
         };
 
+        final String[] codEstudiante = new String[1];
+
         spinnerEstudiante.setAdapter(stringArrayAdapterEstu);
+        spinnerEstudiante.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                codEstudiante[0] = codEstu.get(position);
+
+            }
+        });
+
 
 
         /* Seccion de los botones del dialgo */
