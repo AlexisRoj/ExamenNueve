@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 
@@ -42,6 +43,8 @@ public class DialogoAgregarTareas extends DialogFragment {
     public static String jsonTare = "json_tarea";
     public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
+
+    private Boolean nuevoDonante = true;
     /**
      * Spinners y Json
      */
@@ -295,8 +298,44 @@ public class DialogoAgregarTareas extends DialogFragment {
             }
         });
 
+
+        /** Trae los argumentos desde el adapter, pasa por el activity*/
+        Bundle args = getArguments();
+        if (args != null) {
+            nuevoDonante = false;
+            textInputEditTarea.setFocusable(false);
+            btnAgregarTarea.setText(R.string.actualizar);
+            /** Metodo encargado de instanciar y asignar los valores de la ediccion*/
+            mRellenarEdit(spinnerAsignatura, spinnerEstudiante, args);
+        }
+
+
         return builder.create();
     }
+
+    private void mRellenarEdit(Spinner spinnerAsignatura, Spinner spinnerEstudiante, Bundle args) {
+
+        textInputEditTarea.setText(args.getString(DiccionarioDatos.nomTarea));
+        textInputEditNota.setText(String.valueOf(args.getInt(DiccionarioDatos.notaTarea)));
+
+        spinnerAsignatura.setSelection(getIndex(spinnerAsignatura,
+                args.getString(DiccionarioDatos.nomAsignaTarea)));
+
+    }
+
+
+    /** Recorre el spinner para realizar la seleccion*/
+    private int getIndex(Spinner spinner, String myString) {
+        int index = 0;
+        for (int i = 0; i <= spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
 
     /**
      * Valida que los datos del textInput no esten vacios

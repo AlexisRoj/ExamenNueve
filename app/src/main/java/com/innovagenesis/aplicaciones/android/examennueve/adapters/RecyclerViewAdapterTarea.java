@@ -1,11 +1,13 @@
 package com.innovagenesis.aplicaciones.android.examennueve.adapters;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 
@@ -26,10 +28,23 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
     private LayoutInflater inflater;
     private Activity activity;
 
+    public interface mEditarElementoRecycler{
+        void EditarElementoRecycler(Bundle bundle);
+    }
+
+    public mEditarElementoRecycler listener;
+
     public RecyclerViewAdapterTarea(List<Tareas> lista, Activity activity) {
         this.lista = lista;
         this.activity = activity;
         inflater =  LayoutInflater.from(activity);
+
+        try {
+            listener = (mEditarElementoRecycler)activity;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -49,6 +64,39 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
         holder.nom_estudiante_item.setText(current.nomEstuTarea);
         holder.nom_asigna_item.setText(current.nomAsignaTarea);
         holder.nota_tarea_item.setText(String.valueOf(current.notaTarea));
+
+
+        holder.imgEditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String nomTarea, nomEstuTarea, nomAsignaTarea;
+                int notaTarea;
+
+                nomTarea = current.nomTarea;
+                nomEstuTarea = current.nomEstuTarea;
+                nomAsignaTarea = current.nomAsignaTarea;
+                notaTarea = current.notaTarea;
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString(DiccionarioDatos.nomTarea,nomTarea);
+                bundle.getString(DiccionarioDatos.nomEstuTarea,nomEstuTarea);
+                bundle.putString(DiccionarioDatos.nomAsignaTarea,nomAsignaTarea);
+                bundle.putInt(DiccionarioDatos.notaTarea,notaTarea);
+
+                listener.EditarElementoRecycler(bundle);
+
+            }
+        });
+
+
+        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

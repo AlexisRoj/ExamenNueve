@@ -21,6 +21,7 @@ import android.view.MenuItem;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
+import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapterTarea;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarAsignaturaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarTareasAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarUsuarioAsyncTask;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ListarAsignaturaAsyncTask.mDesplegarEstudiantes,
         ListarUsuarioAsyncTask.mDesplegarUsuario,
-        ListarTareasAsyncTask.mDesplegarTareas {
+        ListarTareasAsyncTask.mDesplegarTareas,
+        RecyclerViewAdapterTarea.mEditarElementoRecycler {
 
     SharedPreferences preferences;
     int contenedor = R.id.contenedor;
@@ -239,8 +241,27 @@ public class MainActivity extends AppCompatActivity
 
         DialogoAgregarTareas dialogoAgregarTareas =
                 DialogoAgregarTareas.newInstance(jsonEstudiante,jsonAsignatura, jsonTarea);
+        dialogoAgregarTareas.setArguments(args);
         dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
 
+
+    }
+
+    Bundle args = null;
+
+    @Override
+    public void EditarElementoRecycler(Bundle bundle) {
+
+        args = new Bundle();
+
+        args = bundle;
+
+        try {
+            new ListarAsignaturaAsyncTask(MainActivity.this,2).execute(
+                    new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
     }
 }

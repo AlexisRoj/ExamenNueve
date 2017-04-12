@@ -59,6 +59,7 @@ public class TareasFragment extends Fragment {
         RecyclerViewAdapterTarea adapterTarea = new RecyclerViewAdapterTarea(miLita, getActivity());
         recyclerView.setAdapter(adapterTarea);
         recyclerView.setHasFixedSize(true);
+        adapterTarea.notifyDataSetChanged();
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
 }
