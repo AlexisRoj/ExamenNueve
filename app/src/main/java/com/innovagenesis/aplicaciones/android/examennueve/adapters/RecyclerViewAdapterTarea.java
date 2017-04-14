@@ -81,8 +81,8 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
                 Bundle bundle = new Bundle();
 
                 bundle.putString(DiccionarioDatos.nomTarea,nomTarea);
-                bundle.getString(DiccionarioDatos.nomEstuTarea,nomEstuTarea);
                 bundle.putString(DiccionarioDatos.nomAsignaTarea,nomAsignaTarea);
+                bundle.putString(DiccionarioDatos.nomEstuTarea,nomEstuTarea);
                 bundle.putInt(DiccionarioDatos.notaTarea,notaTarea);
 
                 listener.EditarElementoRecycler(bundle);

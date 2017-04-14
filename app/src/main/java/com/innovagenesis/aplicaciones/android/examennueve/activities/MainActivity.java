@@ -219,12 +219,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void DesplegarUsuarioDialogo(String jsonEstud) {
 
-        jsonEstudiante = jsonEstud;
-        try {
-            new ListarTareasAsyncTask(this,2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+
+        DialogoAgregarTareas dialogoAgregarTareas =
+                DialogoAgregarTareas.newInstance(jsonEstud,jsonAsignatura);
+        dialogoAgregarTareas.setArguments(args);
+        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+
 
     }
 
@@ -238,11 +238,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void DesplegarTareaDialogo(String jsonTarea) {
-
-        DialogoAgregarTareas dialogoAgregarTareas =
-                DialogoAgregarTareas.newInstance(jsonEstudiante,jsonAsignatura, jsonTarea);
-        dialogoAgregarTareas.setArguments(args);
-        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
 
 
     }

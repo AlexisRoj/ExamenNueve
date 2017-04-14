@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
@@ -40,9 +41,10 @@ public class DialogoAgregarTareas extends DialogFragment {
     public static final String TAG = "dialogo_agregar_tarea";
     public static String jsonAsigna = "json_asigna";
     public static String jsonEstu = "json_estudiante";
-    public static String jsonTare = "json_tarea";
     public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
+
+    Boolean activarInterface = true;
 
     private Boolean nuevoDonante = true;
     /**
@@ -61,14 +63,13 @@ public class DialogoAgregarTareas extends DialogFragment {
      * Recibe dos json los cuales despues los deserializa para llenar los spinner
      */
     public static DialogoAgregarTareas newInstance
-    (String jsonEstudiante, String jsonAsignatura, String jsonTarea) {
+    (String jsonEstudiante, String jsonAsignatura) {
 
         DialogoAgregarTareas fragment = new DialogoAgregarTareas();
 
         argumentos = new Bundle();
         argumentos.putString(jsonAsigna, jsonAsignatura);
         argumentos.putString(jsonEstu, jsonEstudiante);
-        argumentos.putString(jsonTare, jsonTarea);
         fragment.setArguments(argumentos);
 
         return fragment;
@@ -80,8 +81,8 @@ public class DialogoAgregarTareas extends DialogFragment {
     /**
      * Spinner & TextInput
      */
-    private Spinner spinnerAsignatura;
-    private Spinner spinnerEstudiante;
+    public Spinner spinnerAsignatura;
+    public Spinner spinnerEstudiante;
 
     private TextInputEditText textInputEditTarea;
     private TextInputLayout textInputLayoutTarea;
@@ -115,6 +116,7 @@ public class DialogoAgregarTareas extends DialogFragment {
             codAsigna = new ArrayList<>();
 
             nombreAsigna.add(getString(R.string.spinerMateria));
+            codAsigna.add("-0");
             /**
              *
              * TODO recordar quitar uno a el contador de codigo, para que guarde el codigo correcto
@@ -138,6 +140,7 @@ public class DialogoAgregarTareas extends DialogFragment {
             codEstu = new ArrayList<>();
 
             nombreEstu.add(getString(R.string.selectEstudiante));
+            codEstu.add(getString(R.string.selectEstudiante));
             /**
              *
              * TODO recordar quitar uno a el contador de codigo, para que guarde el codigo correcto
@@ -147,7 +150,7 @@ public class DialogoAgregarTareas extends DialogFragment {
             for (int i = 0; i < jsonEstu.length(); i++) {
 
                 nombreEstu.add(jsonEstu.getJSONObject(i).getString("nom_usuario"));
-                codEstu.add(jsonEstu.getJSONObject(i).getString("ced_usuario"));
+                codEstu.add(jsonEstu.getJSONObject(i).getString("id_usuario"));
 
             }
         } catch (JSONException e) {
@@ -252,6 +255,7 @@ public class DialogoAgregarTareas extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 codEstudiante[0] = codEstu.get(position);
+
             }
 
             @Override
@@ -268,7 +272,6 @@ public class DialogoAgregarTareas extends DialogFragment {
             public void onClick(View v) {
                 String errorTarea = "";
                 String nombreTarea = "";
-                Boolean activarInterface = true;
                 if (TextUtils.isEmpty(textInputEditTarea.getText())) {
                     errorTarea = getString(R.string.campoVacio);
                     activarInterface = false;
@@ -285,6 +288,37 @@ public class DialogoAgregarTareas extends DialogFragment {
                 } else
                     notaTarea = textInputEditNota.getText().toString();
                 mValidarTextInput(textInputLayoutNota, errorTarea);
+
+
+
+                /*Construccoin de empaquetado que se envia a guardar*/
+
+
+                if (codAsignatura[0].equals("-0")) {
+                    activarInterface = false;
+                    Toast.makeText(getContext(), R.string.asignaNull, Toast.LENGTH_SHORT).show();
+                }
+
+                if (codAsignatura[0].equals("-0")) {
+                    activarInterface = false;
+                    Toast.makeText(getContext(), R.string.estuNull, Toast.LENGTH_SHORT).show();
+                }
+
+
+                if (activarInterface){
+
+                    Tareas tareas = new Tareas();
+
+                    tareas.setNomTarea(nombreTarea);
+                    tareas.setIdAsignaTarea(Integer.valueOf(codAsignatura[0]));
+                    tareas.setIdEstuTarea(Integer.valueOf(codEstudiante[0]));
+                    tareas.setNotaTarea(Integer.valueOf(notaTarea));
+
+                }
+
+
+
+
 
             }
 
@@ -321,13 +355,17 @@ public class DialogoAgregarTareas extends DialogFragment {
         spinnerAsignatura.setSelection(getIndex(spinnerAsignatura,
                 args.getString(DiccionarioDatos.nomAsignaTarea)));
 
+        spinnerEstudiante.setSelection(getIndex(spinnerEstudiante,
+                args.getString(DiccionarioDatos.nomEstuTarea)));
+
     }
 
 
     /** Recorre el spinner para realizar la seleccion*/
     private int getIndex(Spinner spinner, String myString) {
         int index = 0;
-        for (int i = 0; i <= spinner.getCount(); i++) {
+        int contar = spinner.getCount();
+        for (int i = 0; i <= contar; i++) {
             if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
                 index = i;
                 break;

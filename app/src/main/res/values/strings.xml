@@ -29,4 +29,6 @@
     <string name="editar">editar</string>
     <string name="borrar">borrar</string>
     <string name="actualizar">Actualizar</string>
+    <string name="asignaNull">La asignatura no puede estar vacia</string>
+    <string name="estuNull">El estudiante no puede estar vacio</string>
 </resources>
