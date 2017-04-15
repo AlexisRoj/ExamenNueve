@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapterTarea;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.InsertarTareaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarAsignaturaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarTareasAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarUsuarioAsyncTask;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
+        preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +65,11 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
                 try {
-                    new ListarAsignaturaAsyncTask(MainActivity.this,2).execute(
+                    new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
                             new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-
 
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity
             // El segundo parametro del constructor indica la accion si va a llenar
             // el spinner o el recycler. 1 = Recycler, 2 = Spinner
             try {
-                new ListarAsignaturaAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+                new ListarAsignaturaAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_estudiante) {
             // Se envía la solicitud asincronica de estudiantes
             try {
-                new ListarUsuarioAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+                new ListarUsuarioAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             // Se envía la solicitud asincronica de tareas
 
             try {
-                new ListarTareasAsyncTask(this,1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+                new ListarTareasAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura){
+    public void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura) {
         // Carga los elementos que van ser enviados al dialogo de agregar tarea
         // Uso para el spinner
         Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         jsonAsignatura = jsonAsigna;
 
         try {
-            new ListarUsuarioAsyncTask(this,2).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+            new ListarUsuarioAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity
     public void DesplegarUsuarioRecycler(ArrayList<UsuariosAsigna> listaUsuarios) {
 
         Fragment fragment = EstudiantesFragment.newInstance(listaUsuarios);
-        mInstanciarFragment(contenedor,fragment).commit();
+        mInstanciarFragment(contenedor, fragment).commit();
     }
 
     String jsonEstudiante;
@@ -218,9 +218,9 @@ public class MainActivity extends AppCompatActivity
     public void DesplegarUsuarioDialogo(String jsonEstud) {
     /* Despliega el dialogo de agregar usuario*/
         DialogoAgregarTareas dialogoAgregarTareas =
-                DialogoAgregarTareas.newInstance(jsonEstud,jsonAsignatura, this);
+                DialogoAgregarTareas.newInstance(jsonEstud, jsonAsignatura, this);
         dialogoAgregarTareas.setArguments(args);
-        dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
+        dialogoAgregarTareas.show(getSupportFragmentManager(), DialogoAgregarTareas.TAG);
 
 
     }
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity
     public void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks) {
         // Llama al fragment
         Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
-        mInstanciarFragment(contenedor,fragment).commit();
+        mInstanciarFragment(contenedor, fragment).commit();
 
     }
 
@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
     Bundle args = null;
 
     @Override
@@ -245,7 +246,7 @@ public class MainActivity extends AppCompatActivity
         args = bundle;
 
         try {
-            new ListarAsignaturaAsyncTask(MainActivity.this,2).execute(
+            new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
                     new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -258,7 +259,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void GuardarTarea(Tareas tareas, Boolean nuevaTarea) {
         tarea = tareas;
-        Toast.makeText(this, tarea.getIdTarea(),Toast.LENGTH_SHORT).show();
+        if (nuevaTarea) {
+
+            try {
+                new InsertarTareaAsyncTask(MainActivity.this, tareas).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(this, String.valueOf(tarea.getNomTarea()), Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(this, String.valueOf(tarea.getIdTarea()), Toast.LENGTH_SHORT).show();
 
 
     }

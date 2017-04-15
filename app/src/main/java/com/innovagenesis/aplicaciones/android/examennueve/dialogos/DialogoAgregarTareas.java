@@ -155,7 +155,7 @@ public class DialogoAgregarTareas extends DialogFragment {
             /** Deserializa el json*/
             for (int i = 0; i < jsonEstu.length(); i++) {
                 nombreEstu.add(jsonEstu.getJSONObject(i).getString("nom_usuario"));
-                codEstu.add(jsonEstu.getJSONObject(i).getString("id_usuario"));
+                codEstu.add(jsonEstu.getJSONObject(i).getString("ced_usuario"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -308,7 +308,7 @@ public class DialogoAgregarTareas extends DialogFragment {
                 if (activarInterface) {
                     Tareas tareas = new Tareas();
 
-                    if (nuevaTarea){
+                    if (!nuevaTarea){
                         tareas.setIdTarea(idUsuario);
                     }
 
