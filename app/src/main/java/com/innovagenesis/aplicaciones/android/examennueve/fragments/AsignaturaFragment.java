@@ -61,7 +61,8 @@ public class AsignaturaFragment extends Fragment {
                 GridLayoutManager.VERTICAL, false));
         RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getActivity(),miLista);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //LinearLayoutManager(getContext() lo hace linear
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerView.setAdapter(adapter);
 
     }

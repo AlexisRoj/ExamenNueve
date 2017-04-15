@@ -29,6 +29,7 @@ public class DiccionarioDatos {
     public static final String URL_SERVICIO_ASIGNA =
             "http://" + ip + ":" + puerto + "/WebServiceExamenNueve/webapi/asignatura/";
 
+    public static String idTarea = "idTarea";
     public static String nomTarea = "nomTarea";
     public static String nomEstuTarea = "nomEstuTarea";
     public static String nomAsignaTarea = "nomAsignaTarea";

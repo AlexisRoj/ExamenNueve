@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity
         ListarAsignaturaAsyncTask.mDesplegarEstudiantes,
         ListarUsuarioAsyncTask.mDesplegarUsuario,
         ListarTareasAsyncTask.mDesplegarTareas,
-        RecyclerViewAdapterTarea.mEditarElementoRecycler {
+        RecyclerViewAdapterTarea.mEditarElementoRecycler,
+        DialogoAgregarTareas.DatosGuardarTarea {
 
     SharedPreferences preferences;
     int contenedor = R.id.contenedor;
@@ -60,10 +62,6 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-               /* mDialogoAgregarTareas dialogoAgregarTareas = new mDialogoAgregarTareas();
-                dialogoAgregarTareas.show(getSupportFragmentManager(),mDialogoAgregarTareas.TAG);*/
 
                 try {
                     new ListarAsignaturaAsyncTask(MainActivity.this,2).execute(
@@ -218,10 +216,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void DesplegarUsuarioDialogo(String jsonEstud) {
-
-
+    /* Despliega el dialogo de agregar usuario*/
         DialogoAgregarTareas dialogoAgregarTareas =
-                DialogoAgregarTareas.newInstance(jsonEstud,jsonAsignatura);
+                DialogoAgregarTareas.newInstance(jsonEstud,jsonAsignatura, this);
         dialogoAgregarTareas.setArguments(args);
         dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
 
@@ -230,7 +227,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks) {
-
+        // Llama al fragment
         Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
         mInstanciarFragment(contenedor,fragment).commit();
 
@@ -241,14 +238,10 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
     Bundle args = null;
 
     @Override
     public void EditarElementoRecycler(Bundle bundle) {
-
-        args = new Bundle();
-
         args = bundle;
 
         try {
@@ -257,6 +250,16 @@ public class MainActivity extends AppCompatActivity
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
+    }
+
+    Tareas tarea = null;
+
+    @Override
+    public void GuardarTarea(Tareas tareas, Boolean nuevaTarea) {
+        tarea = tareas;
+        Toast.makeText(this, tarea.getIdTarea(),Toast.LENGTH_SHORT).show();
+
 
     }
 }

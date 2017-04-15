@@ -4,6 +4,7 @@ package com.innovagenesis.aplicaciones.android.examennueve.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class EstudiantesFragment extends Fragment {
         RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getContext(),miLista);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //LinearLayoutManager(getContext() lo hace linear
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
 }

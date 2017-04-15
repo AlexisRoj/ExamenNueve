@@ -1,6 +1,7 @@
 package com.innovagenesis.aplicaciones.android.examennueve.dialogos;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
@@ -44,9 +45,11 @@ public class DialogoAgregarTareas extends DialogFragment {
     public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
 
+    private int idUsuario;
+
     Boolean activarInterface = true;
 
-    private Boolean nuevoDonante = true;
+    private Boolean nuevaTarea = true;
     /**
      * Spinners y Json
      */
@@ -55,29 +58,34 @@ public class DialogoAgregarTareas extends DialogFragment {
     private ArrayList<String> nombreEstu;
     private ArrayList<String> codEstu;
 
-    private interface DatosGuardarTarea {
-        void GuardarTarea(Tareas tareas);
+    public interface DatosGuardarTarea {
+        void GuardarTarea(Tareas tareas, Boolean nuevaTarea);
     }
+
+    public static DatosGuardarTarea listener;
 
     /**
      * Recibe dos json los cuales despues los deserializa para llenar los spinner
      */
+
     public static DialogoAgregarTareas newInstance
-    (String jsonEstudiante, String jsonAsignatura) {
+    (String jsonEstudiante, String jsonAsignatura, Activity activity) {
 
         DialogoAgregarTareas fragment = new DialogoAgregarTareas();
-
         argumentos = new Bundle();
         argumentos.putString(jsonAsigna, jsonAsignatura);
         argumentos.putString(jsonEstu, jsonEstudiante);
         fragment.setArguments(argumentos);
 
+        try {
+            listener = (DatosGuardarTarea) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException
+                    ("La interface ListarUsuarioAsyncTask no ha sido implementada");
+        }
+
         return fragment;
     }
-
-
-    public DatosGuardarTarea listener;
-
     /**
      * Spinner & TextInput
      */
@@ -97,6 +105,13 @@ public class DialogoAgregarTareas extends DialogFragment {
         @SuppressLint("InflateParams") final
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.dialogo_agregar_tarea, null);
+        /*
+        Cuando inicia el dialogo arranca la variable nueva tarea en verdadero
+        si vienen args cuando instancia el dialogo, cambia a false, la funcionalidad
+        es cambiar el texto del boton
+        */
+
+        nuevaTarea = true;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);
@@ -117,14 +132,9 @@ public class DialogoAgregarTareas extends DialogFragment {
 
             nombreAsigna.add(getString(R.string.spinerMateria));
             codAsigna.add("-0");
-            /**
-             *
-             * TODO recordar quitar uno a el contador de codigo, para que guarde el codigo correcto
-             *
-             * */
 
+            /** Deserializa el json*/
             for (int i = 0; i < jsonAsina.length(); i++) {
-
                 nombreAsigna.add(jsonAsina.getJSONObject(i).getString("nom_asigna"));
                 codAsigna.add(jsonAsina.getJSONObject(i).getString("id_asigna"));
             }
@@ -141,22 +151,15 @@ public class DialogoAgregarTareas extends DialogFragment {
 
             nombreEstu.add(getString(R.string.selectEstudiante));
             codEstu.add(getString(R.string.selectEstudiante));
-            /**
-             *
-             * TODO recordar quitar uno a el contador de codigo, para que guarde el codigo correcto
-             *
-             * */
 
+            /** Deserializa el json*/
             for (int i = 0; i < jsonEstu.length(); i++) {
-
                 nombreEstu.add(jsonEstu.getJSONObject(i).getString("nom_usuario"));
                 codEstu.add(jsonEstu.getJSONObject(i).getString("id_usuario"));
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         spinnerAsignatura = (Spinner) view.findViewById(R.id.spinner_selecionar_asignatura);
         spinnerEstudiante = (Spinner) view.findViewById(R.id.spinner_selecionar_estudiante);
@@ -167,7 +170,7 @@ public class DialogoAgregarTareas extends DialogFragment {
         textInputLayoutNota = (TextInputLayout) view.findViewById(R.id.txt_inputlayout_nota_tarea);
         textInputEditNota = (TextInputEditText) view.findViewById(R.id.txt_inputEdit_nota_tarea);
 
-        Button btnAgregarTarea = (Button) view.findViewById(R.id.btn_ingresar_tarea);
+        final Button btnAgregarTarea = (Button) view.findViewById(R.id.btn_ingresar_tarea);
         Button btnCancelarTarea = (Button) view.findViewById(R.id.btn_cancelar_tarea);
 
 
@@ -219,10 +222,7 @@ public class DialogoAgregarTareas extends DialogFragment {
             }
         });
 
-
-
         /* Spinner Usuario o Estudiante*/
-
         ArrayAdapter<String> stringArrayAdapterEstu = new ArrayAdapter<String>
                 (getActivity(), R.layout.spinner_item, nombreEstu) {
 
@@ -253,9 +253,8 @@ public class DialogoAgregarTareas extends DialogFragment {
         spinnerEstudiante.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                /* Devuelve el arreglo de codigo estudiante*/
                 codEstudiante[0] = codEstu.get(position);
-
             }
 
             @Override
@@ -264,12 +263,11 @@ public class DialogoAgregarTareas extends DialogFragment {
             }
         });
 
-
         /* Seccion de los botones del dialgo */
-
         btnAgregarTarea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Valida que los campos no esten vacios*/
                 String errorTarea = "";
                 String nombreTarea = "";
                 if (TextUtils.isEmpty(textInputEditTarea.getText())) {
@@ -277,8 +275,8 @@ public class DialogoAgregarTareas extends DialogFragment {
                     activarInterface = false;
                 } else
                     nombreTarea = textInputEditTarea.getText().toString();
-                mValidarTextInput(textInputLayoutTarea, errorTarea);
 
+                mValidarTextInput(textInputLayoutTarea, errorTarea);
 
                 errorTarea = "";
                 String notaTarea = "";
@@ -287,47 +285,47 @@ public class DialogoAgregarTareas extends DialogFragment {
                     activarInterface = false;
                 } else
                     notaTarea = textInputEditNota.getText().toString();
+
                 mValidarTextInput(textInputLayoutNota, errorTarea);
 
-
-
-                /*Construccoin de empaquetado que se envia a guardar*/
-
-
+                /* Validación de spinner que esten selecionados*/
                 if (codAsignatura[0].equals("-0")) {
                     activarInterface = false;
                     Toast.makeText(getContext(), R.string.asignaNull, Toast.LENGTH_SHORT).show();
                 }
-
                 if (codAsignatura[0].equals("-0")) {
                     activarInterface = false;
                     Toast.makeText(getContext(), R.string.estuNull, Toast.LENGTH_SHORT).show();
                 }
 
+                /*Cambia el texto del bonton de guardar a actualizar*/
+                if (nuevaTarea) {
+                    btnAgregarTarea.setText(getContext().getResources().getString(R.string.actualizar));
+                }
 
-                if (activarInterface){
-
+                /*Construcción de empaquetado que se envia a guardar, valida que no
+                * existan campos vacios*/
+                if (activarInterface) {
                     Tareas tareas = new Tareas();
+
+                    if (nuevaTarea){
+                        tareas.setIdTarea(idUsuario);
+                    }
 
                     tareas.setNomTarea(nombreTarea);
                     tareas.setIdAsignaTarea(Integer.valueOf(codAsignatura[0]));
                     tareas.setIdEstuTarea(Integer.valueOf(codEstudiante[0]));
                     tareas.setNotaTarea(Integer.valueOf(notaTarea));
 
+                    /* Cuando trae argumentos lo pasa a true y es actualizar*/
+                    listener.GuardarTarea(tareas,nuevaTarea);
                 }
-
-
-
-
-
             }
-
         });
 
         btnCancelarTarea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dismiss();
             }
         });
@@ -336,16 +334,18 @@ public class DialogoAgregarTareas extends DialogFragment {
         /** Trae los argumentos desde el adapter, pasa por el activity*/
         Bundle args = getArguments();
         if (args != null) {
-            nuevoDonante = false;
+            nuevaTarea = false;
             textInputEditTarea.setFocusable(false);
             btnAgregarTarea.setText(R.string.actualizar);
+            idUsuario = args.getInt(DiccionarioDatos.idTarea);
             /** Metodo encargado de instanciar y asignar los valores de la ediccion*/
             mRellenarEdit(spinnerAsignatura, spinnerEstudiante, args);
         }
-
-
         return builder.create();
     }
+
+
+
 
     private void mRellenarEdit(Spinner spinnerAsignatura, Spinner spinnerEstudiante, Bundle args) {
 
@@ -359,9 +359,10 @@ public class DialogoAgregarTareas extends DialogFragment {
                 args.getString(DiccionarioDatos.nomEstuTarea)));
 
     }
-
-
-    /** Recorre el spinner para realizar la seleccion*/
+    /**
+     * Recorre el spinner para realizar la seleccion, cuando se encuentra en modo
+     * editar
+     */
     private int getIndex(Spinner spinner, String myString) {
         int index = 0;
         int contar = spinner.getCount();

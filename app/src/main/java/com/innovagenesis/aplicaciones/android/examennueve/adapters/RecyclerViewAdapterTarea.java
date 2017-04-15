@@ -71,8 +71,9 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
             public void onClick(View v) {
 
                 String nomTarea, nomEstuTarea, nomAsignaTarea;
-                int notaTarea;
+                int notaTarea,idTarea;
 
+                idTarea = current.idTarea;
                 nomTarea = current.nomTarea;
                 nomEstuTarea = current.nomEstuTarea;
                 nomAsignaTarea = current.nomAsignaTarea;
@@ -80,6 +81,7 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
 
                 Bundle bundle = new Bundle();
 
+                bundle.putInt(DiccionarioDatos.idTarea,idTarea);
                 bundle.putString(DiccionarioDatos.nomTarea,nomTarea);
                 bundle.putString(DiccionarioDatos.nomAsignaTarea,nomAsignaTarea);
                 bundle.putString(DiccionarioDatos.nomEstuTarea,nomEstuTarea);

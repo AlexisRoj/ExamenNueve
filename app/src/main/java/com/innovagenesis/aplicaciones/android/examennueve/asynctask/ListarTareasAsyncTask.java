@@ -104,6 +104,7 @@ public class ListarTareasAsyncTask extends AsyncTask<URL, Integer, String> {
 
                         Tareas tareas = new Tareas();
 
+                        tareas.setIdTarea(jsonArray.getJSONObject(i).getInt("id_tarea"));
                         tareas.setNomTarea(jsonArray.getJSONObject(i).getString("nom_tarea"));
                         tareas.setNomAsignaTarea(jsonArray.getJSONObject(i).getString("nom_asigna_tarea"));
                         tareas.setNomEstuTarea(jsonArray.getJSONObject(i).getString("nom_usuario_tarea"));
