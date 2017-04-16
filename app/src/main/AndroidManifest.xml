@@ -29,6 +29,15 @@
             </intent-filter>
 
         </activity>
+
+        <provider
+            android:name="com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidos"
+            android:authorities=".ProveedorContenidos"
+            android:exported="true"
+            android:multiprocess="true">
+
+        </provider>
+
     </application>
 
 </manifest>
