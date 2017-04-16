@@ -31,4 +31,7 @@
     <string name="actualizar">Actualizar</string>
     <string name="asignaNull">La asignatura no puede estar vacia</string>
     <string name="estuNull">El estudiante no puede estar vacio</string>
+    <string name="borrarTarea">¿Desea borrar la tarea?</string>
+    <string name="eliminarTarea">Eliminar tarea</string>
+    <string name="aceptar">Aceptar</string>
 </resources>
