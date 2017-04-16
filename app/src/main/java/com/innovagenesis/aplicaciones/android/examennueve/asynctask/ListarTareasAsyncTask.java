@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 
@@ -93,28 +94,34 @@ public class ListarTareasAsyncTask extends AsyncTask<URL, Integer, String> {
 
         switch (evento) {
 
-            case 1:{
+            case 1: {
                 //Carga el fragmento
 
                 try {
 
                     JSONArray jsonArray = new JSONArray(s);
 
-                    for (int i = 0; i< jsonArray.length(); i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
 
                         Tareas tareas = new Tareas();
 
-                        tareas.setIdTarea(jsonArray.getJSONObject(i).getInt("id_tarea"));
-                        tareas.setNomTarea(jsonArray.getJSONObject(i).getString("nom_tarea"));
-                        tareas.setNomAsignaTarea(jsonArray.getJSONObject(i).getString("nom_asigna_tarea"));
-                        tareas.setNomEstuTarea(jsonArray.getJSONObject(i).getString("nom_usuario_tarea"));
-                        tareas.setNotaTarea(Integer.valueOf(jsonArray.getJSONObject(i).getString("nota_tarea")));
+                        tareas.setIdTarea(jsonArray.getJSONObject(i).
+                                getInt(DiccionarioDatos.idTarea));
+                        tareas.setNomTarea(jsonArray.getJSONObject(i).
+                                getString(DiccionarioDatos.nomTarea));
+                        tareas.setNomAsignaTarea(jsonArray.getJSONObject(i).
+                                getString(DiccionarioDatos.nomAsignaTarea));
+                        tareas.setNomEstuTarea(jsonArray.getJSONObject(i).
+                                getString(DiccionarioDatos.nomUsuarioTarea));
+                        tareas.setNotaTarea(Integer.valueOf(jsonArray.getJSONObject(i).
+                                getString(DiccionarioDatos.notaTarea)));
 
                         lista.add(tareas);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.errorJSON,
+                            Toast.LENGTH_SHORT).show();
                 }
                 listener.DesplegarTareaRecycler(lista);
                 break;

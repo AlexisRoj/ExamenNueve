@@ -39,7 +39,7 @@ import java.util.ArrayList;
 
 public class DialogoAgregarTareas extends DialogFragment {
 
-    public static final String TAG = "dialogo_agregar_tarea";
+    public static final String TAG_DIALOGO = "dialogo_agregar_tarea";
     public static String jsonAsigna = "json_asigna";
     public static String jsonEstu = "json_estudiante";
     public String nombreTarea = "nombre_tarea";
@@ -319,6 +319,7 @@ public class DialogoAgregarTareas extends DialogFragment {
 
                     /* Cuando trae argumentos lo pasa a true y es actualizar*/
                     listener.GuardarTarea(tareas,nuevaTarea);
+                    dismiss();
                 }
             }
         });
@@ -343,9 +344,6 @@ public class DialogoAgregarTareas extends DialogFragment {
         }
         return builder.create();
     }
-
-
-
 
     private void mRellenarEdit(Spinner spinnerAsignatura, Spinner spinnerEstudiante, Bundle args) {
 

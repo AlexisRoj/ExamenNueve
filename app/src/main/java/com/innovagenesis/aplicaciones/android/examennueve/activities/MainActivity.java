@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapterTarea;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ActualizarTareaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.InsertarTareaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarAsignaturaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarTareasAsyncTask;
@@ -220,7 +222,7 @@ public class MainActivity extends AppCompatActivity
         DialogoAgregarTareas dialogoAgregarTareas =
                 DialogoAgregarTareas.newInstance(jsonEstud, jsonAsignatura, this);
         dialogoAgregarTareas.setArguments(args);
-        dialogoAgregarTareas.show(getSupportFragmentManager(), DialogoAgregarTareas.TAG);
+        dialogoAgregarTareas.show(getSupportFragmentManager(), DialogoAgregarTareas.TAG_DIALOGO);
 
 
     }
@@ -262,14 +264,27 @@ public class MainActivity extends AppCompatActivity
         if (nuevaTarea) {
 
             try {
-                new InsertarTareaAsyncTask(MainActivity.this, tareas).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+                new InsertarTareaAsyncTask(MainActivity.this, tareas)
+                        .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this, String.valueOf(tarea.getNomTarea()), Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(this, String.valueOf(tarea.getIdTarea()), Toast.LENGTH_SHORT).show();
+        } else {
 
+            try {
+                new ActualizarTareaAsyncTask(MainActivity.this, tareas)
+                        .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA + tareas.getIdTarea()));
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            new ListarTareasAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
     }
 }

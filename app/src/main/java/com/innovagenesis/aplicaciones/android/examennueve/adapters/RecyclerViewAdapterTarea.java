@@ -86,12 +86,10 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
                 bundle.putString(DiccionarioDatos.nomAsignaTarea,nomAsignaTarea);
                 bundle.putString(DiccionarioDatos.nomEstuTarea,nomEstuTarea);
                 bundle.putInt(DiccionarioDatos.notaTarea,notaTarea);
-
                 listener.EditarElementoRecycler(bundle);
 
             }
         });
-
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override

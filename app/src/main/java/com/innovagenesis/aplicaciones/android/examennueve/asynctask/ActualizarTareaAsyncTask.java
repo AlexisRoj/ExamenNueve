@@ -18,19 +18,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Clase encargada de insertar las tareas
+ * Clase encargada de actualizar las tareas
  * Created by alexi on 15/04/2017.
  */
 
-public class InsertarTareaAsyncTask extends AsyncTask<URL, Integer, Boolean> {
+public class ActualizarTareaAsyncTask extends AsyncTask<URL,Integer,Boolean> {
 
-    private Activity activity;
-    private ProgressDialog progressDialog;
+    Activity activity;
+    ProgressDialog progressDialog;
     private Tareas tareas;
 
-    public InsertarTareaAsyncTask(Activity activity, Tareas tareas) {
+    public ActualizarTareaAsyncTask(Activity activity, Tareas tareas) {
         this.activity = activity;
         this.tareas = tareas;
+
         progressDialog = new ProgressDialog(activity);
     }
 
@@ -39,17 +40,17 @@ public class InsertarTareaAsyncTask extends AsyncTask<URL, Integer, Boolean> {
 
         HttpURLConnection connection = null;
 
+        JSONObject datos = new JSONObject();
+
         try {
-            JSONObject datos = new JSONObject();
+            datos.put(DiccionarioDatos.nomTarea,tareas.getNomTarea())
+                    .put(DiccionarioDatos.idAsignaTarea,tareas.getIdAsignaTarea())
+                    .put(DiccionarioDatos.idEstuTarea,tareas.getIdEstuTarea())
+                    .put(DiccionarioDatos.notaTarea,tareas.getNotaTarea());
 
-            /* Crea el JSONObject y le asigna las tareas*/
-            datos.put(DiccionarioDatos.nomTarea, tareas.getNomTarea())
-                    .put(DiccionarioDatos.idEstuTarea, tareas.getIdEstuTarea())
-                    .put(DiccionarioDatos.idAsignaTarea, tareas.getIdAsignaTarea())
-                    .put(DiccionarioDatos.notaTarea, tareas.getNotaTarea());
+            connection = (HttpURLConnection)params[0].openConnection();
 
-            connection = (HttpURLConnection) params[0].openConnection();
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod("PUT");
             connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
             connection.setDoOutput(true);
             connection.setFixedLengthStreamingMode(datos.toString().getBytes().length);
@@ -59,11 +60,8 @@ public class InsertarTareaAsyncTask extends AsyncTask<URL, Integer, Boolean> {
             output.close();
             return true;
 
-        } catch (IOException | JSONException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
-        } finally {
-            assert connection != null;
-            connection.disconnect();
         }
         return null;
     }

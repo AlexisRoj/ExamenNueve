@@ -29,13 +29,15 @@ public class DiccionarioDatos {
     public static final String URL_SERVICIO_ASIGNA =
             "http://" + ip + ":" + puerto + "/WebServiceExamenNueve/webapi/asignatura/";
 
-    /* Llaves tareas*/
-    public static String idTarea = "idTarea";
-    public static String nomTarea = "nomTarea";
-    public static String idEstuTarea = "idEstuTarea";
-    public static String idAsignaTarea = "idAsignaTarea";
-    public static String nomEstuTarea = "nomEstuTarea";
-    public static String nomAsignaTarea = "nomAsignaTarea";
-    public static String notaTarea = "notaTarea";
+    /* Llaves tareas, recordar que son los nombres de las varias del constructor
+    * definido en el webservice*/
+    public static String idTarea = "id_tarea";
+    public static String nomTarea = "nom_tarea";
+    public static String idEstuTarea = "id_estudiante_tarea";
+    public static String idAsignaTarea = "id_asigna_tarea";
+    public static String nomEstuTarea = "nom_estudiante_tarea";
+    public static String nomUsuarioTarea = "nom_usuario_tarea";
+    public static String nomAsignaTarea = "nom_asigna_tarea";
+    public static String notaTarea = "nota_tarea";
 
 }
