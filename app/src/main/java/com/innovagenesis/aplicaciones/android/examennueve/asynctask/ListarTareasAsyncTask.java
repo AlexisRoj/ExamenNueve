@@ -52,7 +52,7 @@ public class ListarTareasAsyncTask extends AsyncTask<URL, Integer, String> {
 
         void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks);
 
-        void DesplegarTareaDialogo(String jsonTarea);
+        void LlenarProviderTareas(String jsonTarea);
     }
 
     private mDesplegarTareas listener;
@@ -129,7 +129,7 @@ public class ListarTareasAsyncTask extends AsyncTask<URL, Integer, String> {
 
             case 2:
                 //Valida si ya existe la tarea
-                listener.DesplegarTareaDialogo(s);
+                listener.LlenarProviderTareas(s);
                 break;
         }
     }

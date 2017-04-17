@@ -31,8 +31,8 @@
         </activity>
 
         <provider
-            android:name="com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidos"
-            android:authorities=".ProveedorContenidos"
+            android:name=".provider.ProveedorContenidosTareas"
+            android:authorities="com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidosTareas"
             android:exported="true"
             android:multiprocess="true">
 

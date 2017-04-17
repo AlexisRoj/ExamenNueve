@@ -1,6 +1,7 @@
 package com.innovagenesis.aplicaciones.android.examennueve.activities;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,6 +36,11 @@ import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesF
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+import com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidosTareas;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,6 +66,13 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
+
+
+        try {
+            new ListarTareasAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -235,9 +248,42 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Encargado de llenar el content provider de tareas
+     */
     @Override
-    public void DesplegarTareaDialogo(String jsonTarea) {
+    public void LlenarProviderTareas(String jsonTarea) {
 
+        if (jsonTarea != null) {
+
+            try {
+                JSONArray jsonArray = new JSONArray(jsonTarea);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    ContentValues valores = new ContentValues();
+                    valores.put(ProveedorContenidosTareas.id_tarea, jsonArray.getJSONObject(i)
+                            .getInt(DiccionarioDatos.idTarea));
+                    valores.put(ProveedorContenidosTareas.nom_tarea, jsonArray.getJSONObject(i)
+                            .getString(DiccionarioDatos.notaTarea));
+                    valores.put(ProveedorContenidosTareas.asingna_tarea, jsonArray.getJSONObject(i)
+                            .getString(DiccionarioDatos.nomAsignaTarea));
+                    valores.put(ProveedorContenidosTareas.estud_tarea, jsonArray.getJSONObject(i)
+                            .getString(DiccionarioDatos.nomUsuarioTarea));
+                    valores.put(ProveedorContenidosTareas.nota_tarea, jsonArray.getJSONObject(i)
+                            .getInt(DiccionarioDatos.notaTarea));
+
+                    getContentResolver().insert(ProveedorContenidosTareas.CONTENEDORURI, valores);
+
+                }
+                Toast.makeText(getApplicationContext(),
+                        "Nuevo registro ingresado " + ProveedorContenidosTareas.CONTENEDORURI,
+                        Toast.LENGTH_LONG).show();
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -267,6 +313,8 @@ public class MainActivity extends AppCompatActivity
                 new InsertarTareaAsyncTask(MainActivity.this, tareas)
                         .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
 
+                /** Crear la seccion del provedor de contenido*/
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -275,6 +323,8 @@ public class MainActivity extends AppCompatActivity
             try {
                 new ActualizarTareaAsyncTask(MainActivity.this, tareas)
                         .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA + tareas.getIdTarea()));
+
+                /** Crear la seccion del provedor de contenido*/
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
