@@ -42,7 +42,12 @@
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-list connection-id="343f64de-443b-4257-888c-3d02d400bbce" dataset="db_examen_nueve.tbl_usuario" active-filter-id="EMPTY_FILTER" />
-    <filter-list connection-id="d88dbef3-aebf-4b07-bd5a-c2ba12b006b7" dataset="main.tbl_tareas" active-filter-id="">
+    <filter-list connection-id="d88dbef3-aebf-4b07-bd5a-c2ba12b006b7" dataset="main.tbl_usuario" active-filter-id="EMPTY_FILTER">
+      <filter id="d8b34da0-e8d0-4a43-b46f-75380693d167" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id_usuario" operator="=" value="" active="true" />
+      </filter>
+    </filter-list>
+    <filter-list connection-id="d88dbef3-aebf-4b07-bd5a-c2ba12b006b7" dataset="main.tbl_tareas" active-filter-id="EMPTY_FILTER">
       <filter id="295d0193-3a9d-4586-98ef-bc94d2478efd" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id_tarea" operator="=" value="" active="true" />
       </filter>
@@ -110,7 +115,7 @@
           <charset value="UTF-8" />
           <ddl-file-binding value="true" />
           <database-logging value="false" />
-          <connect-automatically value="true" />
+          <connect-automatically value="false" />
           <restore-workspace value="true" />
           <environment-type value="default" />
           <idle-time-to-disconnect value="30" />

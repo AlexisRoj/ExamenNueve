@@ -22,17 +22,17 @@ public class ProvedorContenidosUsuarios extends ContentProvider {
 
     private SQLiteDatabase db = null;
     static final String DATABASE_NAME = "db";
-    static final String TABLE_NAME_USUARIO = "tbl_tareas";
+    static final String TABLE_NAME_USUARIO = "tbl_usuario";
     static final int DATABASE_VERSION = 1;
     static final String Sentencia = " CREATE TABLE " + TABLE_NAME_USUARIO
             + " (id_usuario INTEGER PRIMARY KEY, "
             + " nom_usuario TEXT NOT NULL, "
             + " pass_usuario TEXT NOT NULL, "
-            + " rol_usuario INTEGER NOT NULL);";
+            + " rol_user INTEGER NOT NULL);";
     public static final String id_usuario = "id_usuario";
     public static final String nom_usuario = "nom_usuario";
     public static final String pass_usuario = "pass_usuario";
-    public static final String rol_usuario = "rol_usuario";
+    public static final String rol_user = "rol_user";
     static final int uriCode = 1;
     static final UriMatcher uriMatcher;
     static final String NOMBREPROVIDER = "com.innovagenesis.aplicaciones.android.examennueve" +
