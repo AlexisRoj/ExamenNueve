@@ -9,35 +9,34 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import java.util.HashMap;
 
 /**
- * Clase que administra el provedor de contenidos
- * Created by alexi on 16/04/2017.
+ *
+ * Created by alexi on 17/04/2017.
  */
 
-public class ProveedorContenidosTareas extends ContentProvider {
+public class ProvedorContenidosUsuarios extends ContentProvider {
 
     private SQLiteDatabase db = null;
     static final String DATABASE_NAME = "db";
-    static final String TABLE_NAME_TAREAS = "tbl_tareas";
+    static final String TABLE_NAME_USUARIO = "tbl_tareas";
     static final int DATABASE_VERSION = 1;
-    static final String Sentencia = " CREATE TABLE " + TABLE_NAME_TAREAS
-            + " (id_tarea INTEGER PRIMARY KEY, "
-            + " nom_tarea TEXT NOT NULL, "
-            + " asigna_tarea TEXT NOT NULL, "
-            + " estud_tarea TEXT NOT NULL, "
-            + " nota_tarea INTEGER NOT NULL);";
-    public static final String id_tarea = "id_tarea";
-    public static final String nom_tarea = "nom_tarea";
-    public static final String asingna_tarea = "asigna_tarea";
-    public static final String estud_tarea = "estud_tarea";
-    public static final String nota_tarea = "nota_tarea";
+    static final String Sentencia = " CREATE TABLE " + TABLE_NAME_USUARIO
+            + " (id_usuario INTEGER PRIMARY KEY, "
+            + " nom_usuario TEXT NOT NULL, "
+            + " pass_usuario TEXT NOT NULL, "
+            + " rol_usuario INTEGER NOT NULL);";
+    public static final String id_usuario = "id_usuario";
+    public static final String nom_usuario = "nom_usuario";
+    public static final String pass_usuario = "pass_usuario";
+    public static final String rol_usuario = "rol_usuario";
     static final int uriCode = 1;
     static final UriMatcher uriMatcher;
     static final String NOMBREPROVIDER = "com.innovagenesis.aplicaciones.android.examennueve" +
-            ".provider.ProveedorContenidosTareas";
+            ".provider.ProvedorContenidosUsuarios";
     static final String URL = "content://" + NOMBREPROVIDER + "/cte";
     public static final Uri CONTENEDORURI = Uri.parse(URL);
     private static HashMap<String, String> values;
@@ -50,10 +49,6 @@ public class ProveedorContenidosTareas extends ContentProvider {
         uriMatcher.addURI(NOMBREPROVIDER, "cte/*", uriCode);
     }
 
-
-    /**
-     * Se crea la base que crea la tabla de tareas
-     */
 
     private static class BaseDatos extends SQLiteOpenHelper {
 
@@ -69,7 +64,7 @@ public class ProveedorContenidosTareas extends ContentProvider {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USUARIO);
             onCreate(db);
         }
     }
@@ -77,14 +72,14 @@ public class ProveedorContenidosTareas extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-
         Context context = getContext();
-        dbHelper = new BaseDatos(context);
+        dbHelper = new ProvedorContenidosUsuarios.BaseDatos(context);
+
         db = dbHelper.getWritableDatabase();
         if (db != null){
             // Borra la tabla de la base de datos cuando inicia la aplicación
             // para descargar de nuevo el contenido del service
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USUARIO);
             db.execSQL(Sentencia);
             return true;
         }
@@ -95,9 +90,24 @@ public class ProveedorContenidosTareas extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        return null;
-    }
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        qb.setTables(TABLE_NAME_USUARIO);
 
+        switch (uriMatcher.match(uri)) {
+            case uriCode:
+                qb.setProjectionMap(values);
+                break;
+            default:
+                throw new IllegalArgumentException("Uri No soportada " + uri);
+        }
+        if (sortOrder == null || sortOrder == "") {
+            sortOrder = pass_usuario;
+        }
+        Cursor c = qb.query(db, projection, selection, selectionArgs, null,
+                null, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+        return c;
+    }
 
     @Override
     public String getType(Uri uri) {
@@ -110,8 +120,8 @@ public class ProveedorContenidosTareas extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri,ContentValues values) {
-        long rowID = db.insert(TABLE_NAME_TAREAS, "", values);
+    public Uri insert(Uri uri, ContentValues values) {
+        long rowID = db.insert(TABLE_NAME_USUARIO, "", values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENEDORURI, rowID);
             getContext().getContentResolver().notifyChange(_uri, null);
@@ -122,30 +132,11 @@ public class ProveedorContenidosTareas extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        int entero= 0;
-        switch (uriMatcher.match(uri)){
-            case uriCode:
-                entero= db.delete(TABLE_NAME_TAREAS,selection,selectionArgs);
-                break;
-            default:
-                throw  new IllegalArgumentException("Uri desconocida ");
-        }
-
-        return entero;
+        return 0;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        int count = 0;
-        switch (uriMatcher.match(uri)) {
-            case uriCode:
-                count = db.update(TABLE_NAME_TAREAS, values, selection, selectionArgs);
-
-                break;
-            default:
-                throw new IllegalArgumentException("URI desconocidad " + uri);
-        }
-        getContext().getContentResolver().notifyChange(uri, null);
-        return count;
+        return 0;
     }
 }

@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity
                     valores.put(ProveedorContenidosTareas.id_tarea, jsonArray.getJSONObject(i)
                             .getInt(DiccionarioDatos.idTarea));
                     valores.put(ProveedorContenidosTareas.nom_tarea, jsonArray.getJSONObject(i)
-                            .getString(DiccionarioDatos.notaTarea));
+                            .getString(DiccionarioDatos.nomTarea));
                     valores.put(ProveedorContenidosTareas.asingna_tarea, jsonArray.getJSONObject(i)
                             .getString(DiccionarioDatos.nomAsignaTarea));
                     valores.put(ProveedorContenidosTareas.estud_tarea, jsonArray.getJSONObject(i)
