@@ -130,6 +130,7 @@ public class ProvedorContenidosUsuarios extends ContentProvider {
         throw new SQLException("Error a agregar el registro " + uri);
     }
 
+    /** Metodos delete y update no se utlizan en usuarios*/
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;

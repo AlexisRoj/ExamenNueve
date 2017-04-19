@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
+import com.innovagenesis.aplicaciones.android.examennueve.activities.MainActivity;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.BorrarTareaAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 
@@ -104,6 +105,7 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
 
                 //idTarea = current.idTarea;
                 mElimarTarea(holder,tareaBorrar).show();
+
 
             }
         });

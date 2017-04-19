@@ -92,6 +92,7 @@ public class ProveedorContenidosTareas extends ContentProvider {
     }
 
 
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
@@ -111,6 +112,10 @@ public class ProveedorContenidosTareas extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri,ContentValues values) {
+
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
+        db.execSQL(Sentencia);
+
         long rowID = db.insert(TABLE_NAME_TAREAS, "", values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENEDORURI, rowID);

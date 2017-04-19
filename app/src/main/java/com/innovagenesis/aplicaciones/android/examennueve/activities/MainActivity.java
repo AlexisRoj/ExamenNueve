@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences preferences;
     int contenedor = R.id.contenedor;
     private String jsonAsignatura;
+    private Boolean limpiarCampos = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +68,15 @@ public class MainActivity extends AppCompatActivity
 
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
 
-
-        try {
-            new ListarTareasAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        /*  Se llena el provider cuando inicia la primera vez la aplicación*/
+        mLLenarProvider();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                limpiarCampos = true;
                 try {
                     new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
                             new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
@@ -100,6 +98,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    /** Metodo encargado de realizar el llamado del proceso de llenar el provider*/
+    public void mLLenarProvider() {
+        try {
+            new ListarTareasAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -313,7 +320,8 @@ public class MainActivity extends AppCompatActivity
                 new InsertarTareaAsyncTask(MainActivity.this, tareas)
                         .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
 
-                /** Crear la seccion del provedor de contenido*/
+                /** Seccion del provedor de contenido*/
+                mLLenarProvider();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -324,7 +332,8 @@ public class MainActivity extends AppCompatActivity
                 new ActualizarTareaAsyncTask(MainActivity.this, tareas)
                         .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA + tareas.getIdTarea()));
 
-                /** Crear la seccion del provedor de contenido*/
+                /** Seccion del provedor de contenido*/
+                mLLenarProvider();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

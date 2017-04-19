@@ -23,14 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="d88dbef3-aebf-4b07-bd5a-c2ba12b006b7">
-        <schema name="main" object-types="column, constraint, index, table, dataset trigger, view" />
-      </connection>
-      <connection connection-id="343f64de-443b-4257-888c-3d02d400bbce">
-        <schema name="db_examen_nueve" object-types="column, constraint, function, index, procedure, table, dataset trigger, view" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="d88dbef3-aebf-4b07-bd5a-c2ba12b006b7">
