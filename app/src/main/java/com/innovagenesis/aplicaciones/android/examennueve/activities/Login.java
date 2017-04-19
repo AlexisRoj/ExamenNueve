@@ -28,9 +28,8 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
         ConsultarLoginAsync.ValidarLoginUsuario,ListarUsuariosAsyncTask.ConsultaRellenarProvider {
 
     private SharedPreferences preferences;
-    private Boolean recordarLogin = false;
 
-    private String usuario, contrasena;
+    public String usuario, contrasena;
 
 
     @Override
@@ -69,8 +68,6 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
     @Override
     public void HacerLogin(String usuario, String contrasena, Boolean recordar) {
         // envia a consultar los datos atrapados del login y sus campos
-
-        recordarLogin = recordar;
 
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -137,6 +134,10 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
         finish();
     }
 
+    /**
+     * Realiza el llenado del provider, es el resultado de la interface
+     * ListarUsuariosAsyncTask
+     * */
     @Override
     public void RellenarProvider(String s) {
 

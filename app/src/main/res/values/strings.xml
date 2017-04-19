@@ -16,7 +16,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="codigo">codigo</string>
+    <string name="codigo">codigo:  </string>
     <string name="descripcion">Descripcion</string>
     <string name="errorJSON">Error al decodificar json respuesta</string>
     <string name="agregar_tareas">Agregar Tareas</string>

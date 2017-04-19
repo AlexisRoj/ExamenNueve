@@ -59,13 +59,17 @@ public class MainActivity extends AppCompatActivity
     int contenedor = R.id.contenedor;
     private String jsonAsignatura;
     private Boolean limpiarCampos = true;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        this.setTitle("Control de tareas");
+        toolbar.setSubtitle("Inicio");
 
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
 
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 limpiarCampos = true;
                 try {
                     new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
@@ -85,9 +88,6 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
 
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
@@ -209,6 +209,8 @@ public class MainActivity extends AppCompatActivity
         // Uso para el spinner
         Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
         mInstanciarFragment(contenedor, fragment).commit();
+        toolbar.setSubtitle(getString(R.string.asignatura));
+
     }
 
     @Override
@@ -233,6 +235,7 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = EstudiantesFragment.newInstance(listaUsuarios);
         mInstanciarFragment(contenedor, fragment).commit();
+        toolbar.setSubtitle(getString(R.string.estudiante));
     }
 
     String jsonEstudiante;
@@ -251,8 +254,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks) {
         // Llama al fragment de tareas para y envia la lista al recyclerView
+
         Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
         mInstanciarFragment(contenedor, fragment).commit();
+        toolbar.setSubtitle(getString(R.string.tareas));
 
     }
 
