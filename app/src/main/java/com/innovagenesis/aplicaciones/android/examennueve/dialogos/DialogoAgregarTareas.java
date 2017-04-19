@@ -42,13 +42,10 @@ public class DialogoAgregarTareas extends DialogFragment {
     public static final String TAG_DIALOGO = "dialogo_agregar_tarea";
     public static String jsonAsigna = "json_asigna";
     public static String jsonEstu = "json_estudiante";
-    public String nombreTarea = "nombre_tarea";
     private static Bundle argumentos;
 
     private int idUsuario;
-
     Boolean activarInterface = true;
-
     private Boolean nuevaTarea = true;
     /**
      * Spinners y Json
@@ -307,23 +304,19 @@ public class DialogoAgregarTareas extends DialogFragment {
                 * existan campos vacios*/
                 if (activarInterface) {
                     Tareas tareas = new Tareas();
-
                     if (!nuevaTarea){
                         tareas.setIdTarea(idUsuario);
                     }
-
                     tareas.setNomTarea(nombreTarea);
                     tareas.setIdAsignaTarea(Integer.valueOf(codAsignatura[0]));
                     tareas.setIdEstuTarea(Integer.valueOf(codEstudiante[0]));
                     tareas.setNotaTarea(Integer.valueOf(notaTarea));
-
                     /* Cuando trae argumentos lo pasa a true y es actualizar*/
                     listener.GuardarTarea(tareas,nuevaTarea);
                     dismiss();
                 }
             }
         });
-
         btnCancelarTarea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,8 +338,8 @@ public class DialogoAgregarTareas extends DialogFragment {
         return builder.create();
     }
 
+    /** Metodo encargado de llenar los editText cuando viene con un argumento*/
     private void mRellenarEdit(Spinner spinnerAsignatura, Spinner spinnerEstudiante, Bundle args) {
-
         textInputEditTarea.setText(args.getString(DiccionarioDatos.nomTarea));
         textInputEditNota.setText(String.valueOf(args.getInt(DiccionarioDatos.notaTarea)));
 
@@ -355,7 +348,6 @@ public class DialogoAgregarTareas extends DialogFragment {
 
         spinnerEstudiante.setSelection(getIndex(spinnerEstudiante,
                 args.getString(DiccionarioDatos.nomEstuTarea)));
-
     }
     /**
      * Recorre el spinner para realizar la seleccion, cuando se encuentra en modo
@@ -363,14 +355,18 @@ public class DialogoAgregarTareas extends DialogFragment {
      */
     private int getIndex(Spinner spinner, String myString) {
         int index = 0;
-        int contar = spinner.getCount();
-        for (int i = 0; i <= contar; i++) {
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
-                index = i;
-                break;
+
+        if (myString!= null){
+            int contar = spinner.getCount();
+            for (int i = 0; i <= contar; i++) {
+                if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                    index = i;
+                    break;
+                }
             }
+            return index;
         }
-        return index;
+        return 0;
     }
 
 
@@ -385,4 +381,13 @@ public class DialogoAgregarTareas extends DialogFragment {
             textInput.setErrorEnabled(true);
     }
 
+    /**
+     * Encargado de limpiar los argumuentos del activity
+     * */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (this.getArguments()!= null)
+            this.getArguments().clear();
+    }
 }

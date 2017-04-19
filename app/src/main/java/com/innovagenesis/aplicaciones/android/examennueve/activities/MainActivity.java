@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks) {
-        // Llama al fragment
+        // Llama al fragment de tareas para y envia la lista al recyclerView
         Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
         mInstanciarFragment(contenedor, fragment).commit();
 
@@ -296,10 +297,13 @@ public class MainActivity extends AppCompatActivity
 
     Bundle args = null;
 
+
     @Override
     public void EditarElementoRecycler(Bundle bundle) {
-        args = bundle;
+        /*Ejecuta la lectura del json para
+        enviarlo a rellenar el spinner*/
 
+        args = bundle;
         try {
             new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
                     new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
