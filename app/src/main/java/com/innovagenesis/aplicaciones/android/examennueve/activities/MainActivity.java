@@ -7,11 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapterTarea;
@@ -38,11 +34,8 @@ import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragme
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
 import com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidosTareas;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,11 +48,11 @@ public class MainActivity extends AppCompatActivity
         RecyclerViewAdapterTarea.mEditarElementoRecycler,
         DialogoAgregarTareas.DatosGuardarTarea {
 
-    SharedPreferences preferences;
-    int contenedor = R.id.contenedor;
+    private SharedPreferences preferences;
+    private int contenedor = R.id.contenedor;
     private String jsonAsignatura;
-    private Boolean limpiarCampos = true;
-    Toolbar toolbar;
+    private Toolbar toolbar;
+    private Bundle args = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.setTitle("Control de tareas");
+        this.setTitle(getString(R.string.app_name));
         toolbar.setSubtitle("Inicio");
 
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
@@ -80,14 +73,12 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                limpiarCampos = true;
                 try {
                     new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
                             new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -101,7 +92,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    /** Metodo encargado de realizar el llamado del proceso de llenar el provider*/
+    /**
+     * Metodo encargado de realizar el llamado del proceso de llenar el provider
+     */
     public void mLLenarProvider() {
         try {
             new ListarTareasAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
@@ -133,7 +126,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.bprrarPreference) {
             // Encargado de borrar la preference
@@ -146,7 +138,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -175,8 +166,6 @@ public class MainActivity extends AppCompatActivity
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-
-
         } else if (id == R.id.nav_tareas) {
             // Se envía la solicitud asincronica de tareas
 
@@ -210,7 +199,6 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
         mInstanciarFragment(contenedor, fragment).commit();
         toolbar.setSubtitle(getString(R.string.asignatura));
-
     }
 
     @Override
@@ -225,8 +213,6 @@ public class MainActivity extends AppCompatActivity
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -247,8 +233,6 @@ public class MainActivity extends AppCompatActivity
                 DialogoAgregarTareas.newInstance(jsonEstud, jsonAsignatura, this);
         dialogoAgregarTareas.setArguments(args);
         dialogoAgregarTareas.show(getSupportFragmentManager(), DialogoAgregarTareas.TAG_DIALOGO);
-
-
     }
 
     @Override
@@ -258,7 +242,6 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
         mInstanciarFragment(contenedor, fragment).commit();
         toolbar.setSubtitle(getString(R.string.tareas));
-
     }
 
     /**
@@ -284,24 +267,16 @@ public class MainActivity extends AppCompatActivity
                             .getString(DiccionarioDatos.nomUsuarioTarea));
                     valores.put(ProveedorContenidosTareas.nota_tarea, jsonArray.getJSONObject(i)
                             .getInt(DiccionarioDatos.notaTarea));
-
                     getContentResolver().insert(ProveedorContenidosTareas.CONTENEDORURI, valores);
-
                 }
                 Toast.makeText(getApplicationContext(),
                         "Nuevo registro ingresado " + ProveedorContenidosTareas.CONTENEDORURI,
                         Toast.LENGTH_LONG).show();
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
     }
-
-    Bundle args = null;
-
 
     @Override
     public void EditarElementoRecycler(Bundle bundle) {
@@ -315,35 +290,26 @@ public class MainActivity extends AppCompatActivity
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
     }
 
-    Tareas tarea = null;
-
+    /** Encargado de gestionar la accion de guardar o actualizar*/
     @Override
     public void GuardarTarea(Tareas tareas, Boolean nuevaTarea) {
-        tarea = tareas;
         if (nuevaTarea) {
-
             try {
                 new InsertarTareaAsyncTask(MainActivity.this, tareas)
                         .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
-
                 /** Seccion del provedor de contenido*/
                 mLLenarProvider();
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         } else {
-
             try {
                 new ActualizarTareaAsyncTask(MainActivity.this, tareas)
                         .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA + tareas.getIdTarea()));
-
                 /** Seccion del provedor de contenido*/
                 mLLenarProvider();
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

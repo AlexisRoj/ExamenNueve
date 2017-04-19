@@ -327,9 +327,9 @@ public class DialogoAgregarTareas extends DialogFragment {
 
         /** Trae los argumentos desde el adapter, pasa por el activity*/
         Bundle args = getArguments();
-        if (args != null) {
+        if ((args != null) && !args.isEmpty()) {
             nuevaTarea = false;
-            textInputEditTarea.setFocusable(false);
+            //textInputEditTarea.setFocusable(false); //Desabilita nombre de la tarea
             btnAgregarTarea.setText(R.string.actualizar);
             idUsuario = args.getInt(DiccionarioDatos.idTarea);
             /** Metodo encargado de instanciar y asignar los valores de la ediccion*/
