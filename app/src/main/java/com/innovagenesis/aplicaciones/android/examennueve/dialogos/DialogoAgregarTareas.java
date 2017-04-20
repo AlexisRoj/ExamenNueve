@@ -170,7 +170,6 @@ public class DialogoAgregarTareas extends DialogFragment {
         final Button btnAgregarTarea = (Button) view.findViewById(R.id.btn_ingresar_tarea);
         Button btnCancelarTarea = (Button) view.findViewById(R.id.btn_cancelar_tarea);
 
-
         /* Sesión de los spinner materia
         * Es llenado con el json y se le agrega un elemento arriba para que haga el hint
         * */
@@ -203,7 +202,6 @@ public class DialogoAgregarTareas extends DialogFragment {
 
 
         final String[] codAsignatura = new String[1];
-
         spinnerAsignatura.setAdapter(stringArrayAdapterMateria);
         spinnerAsignatura.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -368,8 +366,6 @@ public class DialogoAgregarTareas extends DialogFragment {
         }
         return 0;
     }
-
-
     /**
      * Valida que los datos del textInput no esten vacios
      */
@@ -380,7 +376,6 @@ public class DialogoAgregarTareas extends DialogFragment {
         } else
             textInput.setErrorEnabled(true);
     }
-
     /**
      * Encargado de limpiar los argumuentos del activity
      * */

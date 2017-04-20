@@ -12,8 +12,6 @@ public class DiccionarioDatos {
 
     public static final String nombreUsuario = "nombre de usuario";
     public static final String passUsuario = "Contraseña usuario";
-    public static final int rolUsuario = 0;
-    public static final boolean salvarUsuario = false;
 
     private static final String ip = "192.168.100.4";
     private static final String puerto = "8084";

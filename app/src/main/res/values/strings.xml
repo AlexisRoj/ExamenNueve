@@ -34,4 +34,8 @@
     <string name="borrarTarea">¿Desea borrar la tarea?</string>
     <string name="eliminarTarea">Eliminar tarea</string>
     <string name="aceptar">Aceptar</string>
+    <string name="tituloApp">Sistema de control   de proyectos</string>
+    <string name="salir">Salir</string>
+    <string name="login">Login</string>
+    <string name="recordar_contrase_a">Recordar contraseña</string>
 </resources>

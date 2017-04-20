@@ -28,7 +28,6 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
         ConsultarLoginAsync.ValidarLoginUsuario,ListarUsuariosAsyncTask.ConsultaRellenarProvider {
 
     private SharedPreferences preferences;
-
     public String usuario, contrasena;
 
 
@@ -45,8 +44,6 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
         }
 
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
-
-
         usuario = preferences.getString(DiccionarioDatos.nombreUsuario, null);
         contrasena = preferences.getString(DiccionarioDatos.passUsuario, null);
 
@@ -82,8 +79,6 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
             editor.remove(DiccionarioDatos.passUsuario);
             editor.apply();
         }
-
-
         mLoginUsuario(usuario, contrasena);
     }
 
