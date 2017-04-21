@@ -13,7 +13,7 @@ public class DiccionarioDatos {
     public static final String nombreUsuario = "nombre de usuario";
     public static final String passUsuario = "Contraseña usuario";
 
-    private static final String ip = "192.168.100.4";
+    private static final String ip = "192.168.100.2";
     private static final String puerto = "8084";
 
     // Espacio reservado para las conexiones a base de datos

@@ -33,7 +33,8 @@ import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesF
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
-import com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidosTareas;
+import com.innovagenesis.aplicaciones.android.examennueve.provider.ProvedorContenidosTareas;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.net.MalformedURLException;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private String jsonAsignatura;
     private Toolbar toolbar;
     private Bundle args = null;
+    public static int cantCiclos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +248,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Encargado de llenar el content provider de tareas
      */
+
     @Override
     public void LlenarProviderTareas(String jsonTarea) {
 
@@ -254,22 +257,27 @@ public class MainActivity extends AppCompatActivity
             try {
                 JSONArray jsonArray = new JSONArray(jsonTarea);
 
+                cantCiclos = 0;
+
                 for (int i = 0; i < jsonArray.length(); i++) {
                     ContentValues valores = new ContentValues();
-                    valores.put(ProveedorContenidosTareas.id_tarea, jsonArray.getJSONObject(i)
+                    valores.put(ProvedorContenidosTareas.id_tarea, jsonArray.getJSONObject(i)
                             .getInt(DiccionarioDatos.idTarea));
-                    valores.put(ProveedorContenidosTareas.nom_tarea, jsonArray.getJSONObject(i)
+                    valores.put(ProvedorContenidosTareas.nom_tarea, jsonArray.getJSONObject(i)
                             .getString(DiccionarioDatos.nomTarea));
-                    valores.put(ProveedorContenidosTareas.asingna_tarea, jsonArray.getJSONObject(i)
+                    valores.put(ProvedorContenidosTareas.asingna_tarea, jsonArray.getJSONObject(i)
                             .getString(DiccionarioDatos.nomAsignaTarea));
-                    valores.put(ProveedorContenidosTareas.estud_tarea, jsonArray.getJSONObject(i)
+                    valores.put(ProvedorContenidosTareas.estud_tarea, jsonArray.getJSONObject(i)
                             .getString(DiccionarioDatos.nomUsuarioTarea));
-                    valores.put(ProveedorContenidosTareas.nota_tarea, jsonArray.getJSONObject(i)
+                    valores.put(ProvedorContenidosTareas.nota_tarea, jsonArray.getJSONObject(i)
                             .getInt(DiccionarioDatos.notaTarea));
-                    getContentResolver().insert(ProveedorContenidosTareas.CONTENEDORURI, valores);
+                    getContentResolver().insert(ProvedorContenidosTareas.CONTENEDORURI, valores);
+
+                    //Funciona para marcar la primer vez que entra
+                    cantCiclos = cantCiclos +1;
                 }
                 Toast.makeText(getApplicationContext(),
-                        "Nuevo registro ingresado " + ProveedorContenidosTareas.CONTENEDORURI,
+                        "Nuevo registro ingresado " + ProvedorContenidosTareas.CONTENEDORURI,
                         Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();

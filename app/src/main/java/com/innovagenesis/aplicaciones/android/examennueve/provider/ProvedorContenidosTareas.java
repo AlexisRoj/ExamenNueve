@@ -9,7 +9,12 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.test.ProviderTestCase2;
+
+import com.innovagenesis.aplicaciones.android.examennueve.activities.MainActivity;
+
 import java.util.HashMap;
 
 /**
@@ -17,10 +22,10 @@ import java.util.HashMap;
  * Created by alexi on 16/04/2017.
  */
 
-public class ProveedorContenidosTareas extends ContentProvider {
+public class ProvedorContenidosTareas extends ContentProvider {
 
     private SQLiteDatabase db = null;
-    static final String DATABASE_NAME = "db";
+    static final String DATABASE_NAME = "db2";
     static final String TABLE_NAME_TAREAS = "tbl_tareas";
     static final int DATABASE_VERSION = 1;
     static final String Sentencia = " CREATE TABLE " + TABLE_NAME_TAREAS
@@ -37,7 +42,7 @@ public class ProveedorContenidosTareas extends ContentProvider {
     static final int uriCode = 1;
     static final UriMatcher uriMatcher;
     static final String NOMBREPROVIDER = "com.innovagenesis.aplicaciones.android.examennueve" +
-            ".provider.ProveedorContenidosTareas";
+            ".provider.ProvedorContenidosTareas";
     static final String URL = "content://" + NOMBREPROVIDER + "/cte";
     public static final Uri CONTENEDORURI = Uri.parse(URL);
     private static HashMap<String, String> values;
@@ -96,7 +101,23 @@ public class ProveedorContenidosTareas extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        return null;
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        qb.setTables(TABLE_NAME_TAREAS);
+
+        switch (uriMatcher.match(uri)) {
+            case uriCode:
+                qb.setProjectionMap(values);
+                break;
+            default:
+                throw new IllegalArgumentException("Uri No soportada " + uri);
+        }
+        if (sortOrder == null || sortOrder == "") {
+            sortOrder = id_tarea;
+        }
+        Cursor c = qb.query(db, projection, selection, selectionArgs, null,
+                null, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+        return c;
     }
 
 
@@ -113,9 +134,10 @@ public class ProveedorContenidosTareas extends ContentProvider {
     @Override
     public Uri insert(Uri uri,ContentValues values) {
 
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
-        db.execSQL(Sentencia);
-
+        if (MainActivity.cantCiclos == 0){
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TAREAS);
+            db.execSQL(Sentencia);
+        }
         long rowID = db.insert(TABLE_NAME_TAREAS, "", values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENEDORURI, rowID);

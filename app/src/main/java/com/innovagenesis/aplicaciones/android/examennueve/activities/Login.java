@@ -10,13 +10,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
-import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarTareasAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.login.ListarUsuariosAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.dialogos.DialogoLogin;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.login.ConsultarLoginAsync;
 import com.innovagenesis.aplicaciones.android.examennueve.provider.ProvedorContenidosUsuarios;
-import com.innovagenesis.aplicaciones.android.examennueve.provider.ProveedorContenidosTareas;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,7 +152,7 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
                 getContentResolver().insert(ProvedorContenidosUsuarios.CONTENEDORURI,values);
             }
             Toast.makeText(getApplicationContext(),
-                    "Nuevo registro ingresado " + ProveedorContenidosTareas.CONTENEDORURI,
+                    "Nuevo registro ingresado " + ProvedorContenidosUsuarios.CONTENEDORURI,
                     Toast.LENGTH_LONG).show();
 
         } catch (JSONException e) {

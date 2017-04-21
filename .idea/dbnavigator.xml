@@ -44,6 +44,9 @@
       <filter id="295d0193-3a9d-4586-98ef-bc94d2478efd" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id_tarea" operator="=" value="" active="true" />
       </filter>
+      <filter id="760e6050-ec46-462c-bcce-baaac4629205" name="Filter 2" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id_tarea" operator="=" value="" active="true" />
+      </filter>
     </filter-list>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
