@@ -1,12 +1,12 @@
 package com.innovagenesis.aplicaciones.android.examennueve.activities;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -18,51 +18,69 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.widget.Toast;
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
-import com.innovagenesis.aplicaciones.android.examennueve.asynctask.AsignaturaAsyncTask;
-import com.innovagenesis.aplicaciones.android.examennueve.asynctask.UsuarioAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.adapters.RecyclerViewAdapterTarea;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ActualizarTareaAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.InsertarTareaAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarAsignaturaAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarTareasAsyncTask;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.ListarUsuarioAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.dialogos.DialogoAgregarTareas;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.AsignaturaFragment;
 import com.innovagenesis.aplicaciones.android.examennueve.fragments.EstudiantesFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.fragments.TareasFragment;
+import com.innovagenesis.aplicaciones.android.examennueve.instancias.Tareas;
 import com.innovagenesis.aplicaciones.android.examennueve.instancias.UsuariosAsigna;
+import com.innovagenesis.aplicaciones.android.examennueve.provider.ProvedorContenidosTareas;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        AsignaturaAsyncTask.mDesplegarEstudiantes,
-        UsuarioAsyncTask.mDesplegarUsuario {
+        ListarAsignaturaAsyncTask.mDesplegarEstudiantes,
+        ListarUsuarioAsyncTask.mDesplegarUsuario,
+        ListarTareasAsyncTask.mDesplegarTareas,
+        RecyclerViewAdapterTarea.mEditarElementoRecycler,
+        DialogoAgregarTareas.DatosGuardarTarea {
 
-    SharedPreferences preferences;
-    int contenedor = R.id.contenedor;
+    private SharedPreferences preferences;
+    private int contenedor = R.id.contenedor;
+    private String jsonAsignatura;
+    private Toolbar toolbar;
+    private Bundle args = null;
+    public static int cantCiclos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        this.setTitle(getString(R.string.app_name));
+        toolbar.setSubtitle("Inicio");
+
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
+
+        /*  Se llena el provider cuando inicia la primera vez la aplicación*/
+        mLLenarProvider();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                DialogoAgregarTareas dialogoAgregarTareas = new DialogoAgregarTareas();
-                dialogoAgregarTareas.show(getSupportFragmentManager(),DialogoAgregarTareas.TAG);
-
-
-
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                try {
+                    new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
+                            new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -74,6 +92,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    /**
+     * Metodo encargado de realizar el llamado del proceso de llenar el provider
+     */
+    public void mLLenarProvider() {
+        try {
+            new ListarTareasAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,7 +128,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.bprrarPreference) {
             // Encargado de borrar la preference
@@ -112,7 +140,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -125,8 +152,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_asignatura) {
             // Se envía la solicitud asincronica de asignaturas
+            // El segundo parametro del constructor indica la accion si va a llenar
+            // el spinner o el recycler. 1 = Recycler, 2 = Spinner
             try {
-                new AsignaturaAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+                new ListarAsignaturaAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -135,14 +164,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_estudiante) {
             // Se envía la solicitud asincronica de estudiantes
             try {
-                new UsuarioAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+                new ListarUsuarioAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-
-
         } else if (id == R.id.nav_tareas) {
             // Se envía la solicitud asincronica de tareas
+
+            try {
+                new ListarTareasAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -162,18 +195,144 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void DesplegarAsignatura(ArrayList<UsuariosAsigna> listaAsignatura) {
-
-
+    public void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura) {
+        // Carga los elementos que van ser enviados al dialogo de agregar tarea
+        // Uso para el spinner
         Fragment fragment = AsignaturaFragment.newInstances(listaAsignatura);
         mInstanciarFragment(contenedor, fragment).commit();
+        toolbar.setSubtitle(getString(R.string.asignatura));
+    }
+
+    @Override
+    public void DesplegarAsignaturaDialogo(String jsonAsigna) {
+
+        // Reserva el resultado de la primer consulta ejecutada desde el boton
+        // y ejecuta segunda consulta para llenar spinner
+        jsonAsignatura = jsonAsigna;
+
+        try {
+            new ListarUsuarioAsyncTask(this, 2).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void DesplegarUsuarioRecycler(ArrayList<UsuariosAsigna> listaUsuarios) {
+
+        Fragment fragment = EstudiantesFragment.newInstance(listaUsuarios);
+        mInstanciarFragment(contenedor, fragment).commit();
+        toolbar.setSubtitle(getString(R.string.estudiante));
     }
 
 
     @Override
-    public void DesplegarUsuario(ArrayList<UsuariosAsigna> listaUsuarios) {
+    public void DesplegarUsuarioDialogo(String jsonEstud) {
+    /* Despliega el dialogo de agregar usuario*/
+        DialogoAgregarTareas dialogoAgregarTareas =
+                DialogoAgregarTareas.newInstance(jsonEstud, jsonAsignatura, this);
+        dialogoAgregarTareas.setArguments(args);
+        dialogoAgregarTareas.show(getSupportFragmentManager(), DialogoAgregarTareas.TAG_DIALOGO);
+    }
 
-        Fragment fragment = EstudiantesFragment.newInstance(listaUsuarios);
-        mInstanciarFragment(contenedor,fragment).commit();
+    @Override
+    public void DesplegarTareaRecycler(ArrayList<Tareas> listarTareasAsyncTasks) {
+        // Llama al fragment de tareas para y envia la lista al recyclerView
+
+        Fragment fragment = TareasFragment.newInstance(listarTareasAsyncTasks);
+        mInstanciarFragment(contenedor, fragment).commit();
+        toolbar.setSubtitle(getString(R.string.tareas));
+    }
+
+    /**
+     * Encargado de llenar el content provider de tareas
+     */
+
+    @Override
+    public void LlenarProviderTareas(String jsonTarea) {
+
+        if (jsonTarea != null) {
+
+            try {
+                JSONArray jsonArray = new JSONArray(jsonTarea);
+
+                cantCiclos = 0;
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    ContentValues valores = new ContentValues();
+                    valores.put(ProvedorContenidosTareas.id_tarea, jsonArray.getJSONObject(i)
+                            .getInt(DiccionarioDatos.idTarea));
+                    valores.put(ProvedorContenidosTareas.nom_tarea, jsonArray.getJSONObject(i)
+                            .getString(DiccionarioDatos.nomTarea));
+                    valores.put(ProvedorContenidosTareas.asingna_tarea, jsonArray.getJSONObject(i)
+                            .getString(DiccionarioDatos.nomAsignaTarea));
+                    valores.put(ProvedorContenidosTareas.estud_tarea, jsonArray.getJSONObject(i)
+                            .getString(DiccionarioDatos.nomUsuarioTarea));
+                    valores.put(ProvedorContenidosTareas.nota_tarea, jsonArray.getJSONObject(i)
+                            .getInt(DiccionarioDatos.notaTarea));
+                    getContentResolver().insert(ProvedorContenidosTareas.CONTENEDORURI, valores);
+
+                    //Funciona para marcar la primer vez que entra
+                    cantCiclos = cantCiclos +1;
+                }
+                Toast.makeText(getApplicationContext(),
+                        "Nuevo registro ingresado " + ProvedorContenidosTareas.CONTENEDORURI,
+                        Toast.LENGTH_LONG).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void EditarElementoRecycler(Bundle bundle) {
+        /*Ejecuta la lectura del json para
+        enviarlo a rellenar el spinner*/
+
+        args = bundle;
+        try {
+            new ListarAsignaturaAsyncTask(MainActivity.this, 2).execute(
+                    new URL(DiccionarioDatos.URL_SERVICIO_ASIGNA));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void EliminarTarea(Boolean eliminar) {
+
+        if (eliminar)
+            mLLenarProvider();
+    }
+
+    /** Encargado de gestionar la accion de guardar o actualizar*/
+    @Override
+    public void GuardarTarea(Tareas tareas, Boolean nuevaTarea) {
+        if (nuevaTarea) {
+            try {
+                new InsertarTareaAsyncTask(MainActivity.this, tareas)
+                        .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+                /** Seccion del provedor de contenido*/
+                mLLenarProvider();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                new ActualizarTareaAsyncTask(MainActivity.this, tareas)
+                        .execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA + tareas.getIdTarea()));
+                /** Seccion del provedor de contenido*/
+                mLLenarProvider();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            new ListarTareasAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+            mLLenarProvider();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

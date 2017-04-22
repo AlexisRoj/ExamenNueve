@@ -25,27 +25,31 @@ import java.util.ArrayList;
  * Created by alexi on 04/04/2017.
  */
 
-public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
+public class ListarAsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
 
     private Activity activity;
     private ProgressDialog progressDialog;
+    private int evento;
 
     public interface mDesplegarEstudiantes {
-        void DesplegarAsignatura(ArrayList<UsuariosAsigna> listaAsignatura);
+        void DesplegarAsignaturaRecycler(ArrayList<UsuariosAsigna> listaAsignatura);
+        void DesplegarAsignaturaDialogo(String jsonAsigna);
     }
 
     private mDesplegarEstudiantes listener;
 
 
-    public AsignaturaAsyncTask(Activity activity) {
+
+    public ListarAsignaturaAsyncTask(Activity activity, int evento) {
         this.activity = activity;
+        this.evento = evento;
         progressDialog = new ProgressDialog(activity);
 
         try {
             listener = (mDesplegarEstudiantes) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException
-                    ("La interface AsignaturaAsyncTask no ha sido implementada");
+                    ("La interface ListarAsignaturaAsyncTask no ha sido implementada");
         }
     }
 
@@ -88,23 +92,37 @@ public class AsignaturaAsyncTask extends AsyncTask<URL, Integer, String> {
             //LLena la lista con el json
             ArrayList<UsuariosAsigna> lista = new ArrayList<>();
 
-            try {
-                JSONArray jsonArray = new JSONArray(s);
+            switch (evento){
 
-                for (int i = 0; i < jsonArray.length(); i++) {
+                case 1:
 
-                    UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
+                    try {
+                        JSONArray jsonArray = new JSONArray(s);
 
-                    usuariosAsigna.setDescripcion(jsonArray.getJSONObject(i).getString("nom_asigna"));
-                    usuariosAsigna.setCodigo(jsonArray.getJSONObject(i).getInt("id_asigna"));
+                        for (int i = 0; i < jsonArray.length(); i++) {
 
-                    lista.add(usuariosAsigna);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
+                            UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
+
+                            usuariosAsigna.setDescripcion(jsonArray.getJSONObject(i).getString("nom_asigna"));
+                            usuariosAsigna.setCodigo(jsonArray.getJSONObject(i).getInt("id_asigna"));
+
+                            lista.add(usuariosAsigna);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, R.string.errorJSON, Toast.LENGTH_SHORT).show();
+                    }
+
+
+                    //Llena el recycler
+                    listener.DesplegarAsignaturaRecycler(lista);
+                    break;
+                case 2:
+                    //Pasa el json para ser deserializado en otra parte
+                    listener.DesplegarAsignaturaDialogo(s);
+                    break;
             }
-            listener.DesplegarAsignatura(lista);
+
         }
     }
 }

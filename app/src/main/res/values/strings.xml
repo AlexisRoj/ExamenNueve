@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ExamenNueve</string>
+    <string name="app_name">Control de tareas</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,7 +16,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="codigo">codigo</string>
+    <string name="codigo">codigo:  </string>
     <string name="descripcion">Descripcion</string>
     <string name="errorJSON">Error al decodificar json respuesta</string>
     <string name="agregar_tareas">Agregar Tareas</string>
@@ -24,4 +24,18 @@
     <string name="cancelar">Cancelar</string>
     <string name="ingresar">Ingresar</string>
     <string name="nota">Nota</string>
+    <string name="spinerMateria">Selecione una materia</string>
+    <string name="selectEstudiante">Selecione un estudiante</string>
+    <string name="editar">editar</string>
+    <string name="borrar">borrar</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="asignaNull">La asignatura no puede estar vacia</string>
+    <string name="estuNull">El estudiante no puede estar vacio</string>
+    <string name="borrarTarea">¿Desea borrar la tarea?</string>
+    <string name="eliminarTarea">Eliminar tarea</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="tituloApp">Sistema de control   de proyectos</string>
+    <string name="salir">Salir</string>
+    <string name="login">Login</string>
+    <string name="recordar_contrase_a">Recordar contraseña</string>
 </resources>

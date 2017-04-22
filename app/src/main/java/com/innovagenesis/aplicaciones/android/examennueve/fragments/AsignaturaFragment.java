@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,16 @@ import java.util.List;
 public class AsignaturaFragment extends Fragment {
 
     private static ArrayList<UsuariosAsigna> miLista;
-
+    private static Bundle bundle;
 
     /** Instancia el fragment*/
     public static AsignaturaFragment newInstances (ArrayList<UsuariosAsigna> list){
 
         AsignaturaFragment fragment = new AsignaturaFragment();
-        miLista = list; //asigna la lista
+
+        bundle = new Bundle();
+        bundle.putSerializable("list",list);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -42,20 +46,24 @@ public class AsignaturaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_asignatura, container, false);
+        View view = inflater.inflate(R.layout.fragment_asignatura, container, false);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        miLista = (ArrayList<UsuariosAsigna>) bundle.getSerializable("list");
+
         //Instancia el recyclerView
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_listAsigna);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2,
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4,
                 GridLayoutManager.VERTICAL, false));
         RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getActivity(),miLista);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //LinearLayoutManager(getContext() lo hace linear
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerView.setAdapter(adapter);
 
     }

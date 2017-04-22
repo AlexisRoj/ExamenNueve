@@ -4,6 +4,7 @@ package com.innovagenesis.aplicaciones.android.examennueve.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
  */
 public class EstudiantesFragment extends Fragment {
 
+    public static Bundle bundle;
+    public static String listFragmentEstudiante = "list_estudiante";
     private static ArrayList<UsuariosAsigna> miLista;
 
     public EstudiantesFragment() {
@@ -32,7 +35,10 @@ public class EstudiantesFragment extends Fragment {
 
         EstudiantesFragment fragment = new EstudiantesFragment();
 
-        miLista = list;
+        bundle = new Bundle();
+        bundle.putSerializable("list",list);
+        fragment.setArguments(bundle);
+
         return fragment;
     }
 
@@ -49,10 +55,12 @@ public class EstudiantesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /*Instancia el ReciclerView*/
+        miLista= (ArrayList<UsuariosAsigna>) bundle.getSerializable("list");
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewEstudiante);
         RecyclerViewAdapaterAU adapter = new RecyclerViewAdapaterAU(getContext(),miLista);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //LinearLayoutManager(getContext() lo hace linear
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
     }
 }

@@ -18,28 +18,32 @@ import java.util.ArrayList;
  * Created by alexi on 06/04/2017.
  */
 
-public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
+public class ListarUsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
 
     private ProgressDialog progressDialog;
     private Activity activity;
+    private int evento;
+
 
 
     public interface mDesplegarUsuario {
-        void DesplegarUsuario(ArrayList<UsuariosAsigna> listaUsuarios);
+        void DesplegarUsuarioRecycler(ArrayList<UsuariosAsigna> listaUsuarios);
+        void DesplegarUsuarioDialogo (String jsonEstudiante);
     }
 
     private mDesplegarUsuario listener;
 
 
-    public UsuarioAsyncTask(Activity activity) {
+    public ListarUsuarioAsyncTask(Activity activity, int evento) {
         this.activity = activity;
+        this.evento = evento;
         progressDialog = new ProgressDialog(activity);
 
         try {
             listener = (mDesplegarUsuario)activity;
         } catch (ClassCastException e) {
             throw new ClassCastException
-                    ("La interface UsuarioAsyncTask no ha sido implementada");
+                    ("La interface ListarUsuarioAsyncTask no ha sido implementada");
         }
 
     }
@@ -79,23 +83,33 @@ public class UsuarioAsyncTask extends AsyncTask <URL, Integer, String>{
 
         ArrayList<UsuariosAsigna> lista = new ArrayList<>();
 
-        try {
-            JSONArray jsonArray = new JSONArray(s);
+        switch (evento){
+            // dependiendo el evento solicitado deserializa o envia el
+            // json completo
+            case 1:
 
-            for (int i =0; i< jsonArray.length(); i++){
+                try {
+                    JSONArray jsonArray = new JSONArray(s);
 
-                UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
+                    for (int i =0; i< jsonArray.length(); i++){
 
-                usuariosAsigna.descripcion =jsonArray.getJSONObject(i).getString("nom_usuario");
-                usuariosAsigna.codigo = jsonArray.getJSONObject(i).getInt("ced_usuario");
+                        UsuariosAsigna usuariosAsigna = new UsuariosAsigna();
 
-                lista.add(usuariosAsigna);
-            }
+                        usuariosAsigna.descripcion =jsonArray.getJSONObject(i).getString("nom_usuario");
+                        usuariosAsigna.codigo = jsonArray.getJSONObject(i).getInt("ced_usuario");
 
-            listener.DesplegarUsuario(lista);
+                        lista.add(usuariosAsigna);
+                    }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                listener.DesplegarUsuarioRecycler(lista);
+                break;
+            case 2:
+                listener.DesplegarUsuarioDialogo(s);
+                break;
         }
 
 

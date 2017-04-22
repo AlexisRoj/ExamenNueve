@@ -1,5 +1,6 @@
 package com.innovagenesis.aplicaciones.android.examennueve.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -9,20 +10,23 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.innovagenesis.aplicaciones.android.examennueve.DiccionarioDatos;
+import com.innovagenesis.aplicaciones.android.examennueve.asynctask.login.ListarUsuariosAsyncTask;
 import com.innovagenesis.aplicaciones.android.examennueve.dialogos.DialogoLogin;
 import com.innovagenesis.aplicaciones.android.examennueve.R;
 import com.innovagenesis.aplicaciones.android.examennueve.asynctask.login.ConsultarLoginAsync;
+import com.innovagenesis.aplicaciones.android.examennueve.provider.ProvedorContenidosUsuarios;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerLogin,
-        ConsultarLoginAsync.ValidarLoginUsuario {
+        ConsultarLoginAsync.ValidarLoginUsuario,ListarUsuariosAsyncTask.ConsultaRellenarProvider {
 
     private SharedPreferences preferences;
-    private Boolean recordarLogin = false;
-
-    private String usuario, contrasena;
+    public String usuario, contrasena;
 
 
     @Override
@@ -30,9 +34,14 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        /** Incializa para llenar el content provider*/
+        try {
+            new ListarUsuariosAsyncTask(this).execute(new URL(DiccionarioDatos.URL_SERVICIO_USUARIO));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         preferences = getSharedPreferences(DiccionarioDatos.PREFERENCE_LOGIN, MODE_PRIVATE);
-
-
         usuario = preferences.getString(DiccionarioDatos.nombreUsuario, null);
         contrasena = preferences.getString(DiccionarioDatos.passUsuario, null);
 
@@ -55,8 +64,6 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
     public void HacerLogin(String usuario, String contrasena, Boolean recordar) {
         // envia a consultar los datos atrapados del login y sus campos
 
-        recordarLogin = recordar;
-
         SharedPreferences.Editor editor = preferences.edit();
 
         if (recordar) {
@@ -70,8 +77,6 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
             editor.remove(DiccionarioDatos.passUsuario);
             editor.apply();
         }
-
-
         mLoginUsuario(usuario, contrasena);
     }
 
@@ -103,6 +108,7 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
                         (this, getString(R.string.mensajePrivilegios), Toast.LENGTH_SHORT).show();
     }
 
+
     /**
      * Valida si existe conexion
      */
@@ -119,5 +125,39 @@ public class Login extends AppCompatActivity implements DialogoLogin.DatosHacerL
         Intent intent = new Intent(Login.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Realiza el llenado del provider, es el resultado de la interface
+     * ListarUsuariosAsyncTask
+     * */
+    @Override
+    public void RellenarProvider(String s) {
+
+        try {
+            JSONArray jsonArray = new JSONArray(s);
+
+            for (int i = 0; i < jsonArray.length(); i++){
+
+                ContentValues values = new ContentValues();
+
+                values.put(ProvedorContenidosUsuarios.id_usuario,jsonArray.getJSONObject(i)
+                        .getInt(ProvedorContenidosUsuarios.id_usuario));
+                values.put(ProvedorContenidosUsuarios.nom_usuario,jsonArray.getJSONObject(i)
+                        .getString(ProvedorContenidosUsuarios.nom_usuario));
+                values.put(ProvedorContenidosUsuarios.pass_usuario,jsonArray.getJSONObject(i)
+                        .getString(ProvedorContenidosUsuarios.pass_usuario));
+                values.put(ProvedorContenidosUsuarios.rol_user,jsonArray.getJSONObject(i)
+                        .getInt(ProvedorContenidosUsuarios.rol_user));
+                getContentResolver().insert(ProvedorContenidosUsuarios.CONTENEDORURI,values);
+            }
+            Toast.makeText(getApplicationContext(),
+                    "Nuevo registro ingresado " + ProvedorContenidosUsuarios.CONTENEDORURI,
+                    Toast.LENGTH_LONG).show();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }
