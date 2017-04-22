@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/contenedor"
+    android:background="@drawable/study2"
+    android:orientation="vertical">
+
+    <TextView
+        android:background="@drawable/ftexto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:elevation="10dp"
+        android:textAlignment="center"
+        android:text="@string/tituloApp"
+        android:layout_marginTop="168dp"
+        android:shadowColor="#8a6603"
+        android:shadowDx="3"
+        android:shadowDy="2"
+        android:shadowRadius="1.8" />
+
+</LinearLayout>
