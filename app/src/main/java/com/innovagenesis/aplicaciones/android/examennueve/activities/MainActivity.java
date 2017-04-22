@@ -225,7 +225,6 @@ public class MainActivity extends AppCompatActivity
         toolbar.setSubtitle(getString(R.string.estudiante));
     }
 
-    String jsonEstudiante;
 
     @Override
     public void DesplegarUsuarioDialogo(String jsonEstud) {
@@ -299,6 +298,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void EliminarTarea(Boolean eliminar) {
+
+        if (eliminar)
+            mLLenarProvider();
+    }
+
     /** Encargado de gestionar la accion de guardar o actualizar*/
     @Override
     public void GuardarTarea(Tareas tareas, Boolean nuevaTarea) {
@@ -323,6 +329,7 @@ public class MainActivity extends AppCompatActivity
         }
         try {
             new ListarTareasAsyncTask(this, 1).execute(new URL(DiccionarioDatos.URL_SERVICIO_TAREA));
+            mLLenarProvider();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

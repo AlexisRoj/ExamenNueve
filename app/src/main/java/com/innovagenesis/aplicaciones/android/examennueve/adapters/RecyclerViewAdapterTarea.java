@@ -40,6 +40,7 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
 
     public interface mEditarElementoRecycler{
         void EditarElementoRecycler(Bundle bundle);
+        void EliminarTarea(Boolean eliminar);
     }
 
     public mEditarElementoRecycler listener;
@@ -105,8 +106,6 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
 
                 //idTarea = current.idTarea;
                 mElimarTarea(holder,tareaBorrar).show();
-
-
             }
         });
     }
@@ -135,6 +134,7 @@ public class RecyclerViewAdapterTarea extends RecyclerView.Adapter<RecyclerViewH
                                                     + idTareaBorrar));
                                     /** Remuelve el elemento del recyclerView*/
                                     mRemoverTareaRecycler(item);
+                                    listener.EliminarTarea(true);
                                 } catch (MalformedURLException e) {
                                     e.printStackTrace();
                                 }
